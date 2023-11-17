@@ -21,6 +21,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "tailwind.config.js", "postcss.config.js"],
+  "include": ["src", "tailwind.config.js", "postcss.config.js", "prettier.config.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
