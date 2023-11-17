@@ -1,5 +1,11 @@
+import { Button } from "@nextui-org/button";
+
 function App() {
-  return <h1 className="text-3xl text-red-500 font-bold underline">Hello world!</h1>;
+  return (
+    <>
+      <Button>Press me</Button>
+    </>
+  );
 }
 
 export default App;
