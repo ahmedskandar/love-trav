@@ -1,6 +1,7 @@
 import { NextUIProvider } from "@nextui-org/react";
 import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
+import Login from "./features/Login";
 
 function App() {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ function App() {
     <NextUIProvider navigate={navigate}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="login" element={<p>Login</p>} />
+        <Route path="login" element={<Login />} />
         <Route path="signup" element={<p>Signup</p>} />{" "}
         <Route path="reset" element={<p>Reset</p>} />
         <Route path="app" element={<p>App</p>}>
