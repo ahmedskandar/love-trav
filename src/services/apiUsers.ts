@@ -1,11 +1,14 @@
+import { User } from "../lib/types";
 import supabase from "./supabase";
 
 export const getUsers = async () => {
-  const { data, error } = await supabase.from("users").select("*");
+
+  const { data: user, error } = await supabase.from("users").select("*")
 
   if(error) {
     throw new Error("Users could not be loaded")
   }
-  //eslint-disable-next-line
+  const data = user as User[];
+  
   return data
 };
