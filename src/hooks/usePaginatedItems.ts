@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { UsePaginatedItemsProps } from "../lib/types";
 
+//Custom hook to manage React Query and NextUI Pagination logic
 const usePaginatedItems = <T>({
   queryKey,
   queryFn,
