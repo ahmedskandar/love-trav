@@ -4,7 +4,9 @@ const Dashboard = () => {
   return (
     <>
       <h2>Welcome Ahmed</h2>
-      <UserTable />
+      <div className="mx-5">
+        <UserTable />
+      </div>
     </>
   );
 };
