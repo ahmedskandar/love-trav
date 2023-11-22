@@ -19,7 +19,7 @@ import {
 } from "@nextui-org/react";
 
 const UserTable = () => {
-  const rowsPerPage = 2;
+  const rowsPerPage = 5;
   const { error, isLoading, setPage, totalPages, paginatedItems, page } =
     usePaginatedItems({
       queryKey: ["user"],
