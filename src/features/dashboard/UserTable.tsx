@@ -1,3 +1,10 @@
+import { useCallback } from "react";
+
+import { User as TUser, UserKeys } from "../../lib/types";
+import { COLUMNS } from "../../data/constants";
+import { getUsers } from "../../services/apiUsers";
+import usePaginatedItems from "../../hooks/usePaginatedItems";
+
 import {
   Table,
   TableHeader,
@@ -10,34 +17,27 @@ import {
   Pagination,
   Skeleton,
 } from "@nextui-org/react";
-import { useCallback } from "react";
-import { User as TUser, UserKeys } from "../../lib/types";
-import { COLUMNS } from "../../data/constants";
-import { getUsers } from "../../services/apiUsers";
-import usePaginatedItems from "../../hooks/usePaginatedItems";
 
 const UserTable = () => {
-  const rowsPerPage = 5;
+  const rowsPerPage = 2;
   const { error, isLoading, setPage, totalPages, paginatedItems, page } =
     usePaginatedItems({
       queryKey: ["user"],
       queryFn: getUsers,
       rowsPerPage,
     });
+
   const renderCell = useCallback((user: TUser, columnKey: keyof TUser) => {
     const cellValue = user[columnKey];
 
     switch (columnKey) {
       case UserKeys.STATUS:
         return (
-          <Chip
-            color={"success"}
-            size="sm"
-            variant="flat"
-          >
+          <Chip color={"success"} size="sm" variant="flat">
             {"Online"}
           </Chip>
         );
+
       case UserKeys.NAME:
         return (
           <User
@@ -57,6 +57,7 @@ const UserTable = () => {
   }, []);
 
   if (error) return <p>Something went wrong...</p>; // Use a more user-friendly error message or component here
+
   const skeletonRows = Array.from({ length: rowsPerPage }).map((_, index) => (
     <TableRow key={index}>
       {COLUMNS.map((column) => (
@@ -66,10 +67,10 @@ const UserTable = () => {
       ))}
     </TableRow>
   ));
+
   return (
     <Table
       classNames={{
-        wrapper: ["max-w-6xl mx-auto"],
         th: ["bg-transparent bg-orange-400 text-white"],
       }}
       aria-label="Example table with client side pagination"
@@ -93,7 +94,7 @@ const UserTable = () => {
       {isLoading ? (
         <TableBody>{skeletonRows}</TableBody>
       ) : (
-        <TableBody items={paginatedItems}>
+        <TableBody emptyContent="No users found" items={paginatedItems}>
           {(user) => (
             <TableRow key={user.id}>
               {(columnKey) => (
