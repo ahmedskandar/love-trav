@@ -7,9 +7,10 @@ import {
   TableCell,
   User,
   Chip,
+  Pagination,
 } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { getUsers } from "../../services/apiUsers";
 import { User as TUser, UserKeys } from "../../lib/types";
 
@@ -53,6 +54,18 @@ const UserTable = () => {
     queryKey: ["user"],
     queryFn: getUsers,
   });
+
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10;
+
+  const pages = users ? Math.ceil(users.length / rowsPerPage) : 1;
+
+  const PAGINATED_USERS = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return users?.slice(start, end);
+  }, [page, users]);
 
   const classNames = useMemo(
     () => ({
@@ -98,11 +111,27 @@ const UserTable = () => {
   if (error) return <p>Something went wrong...</p>; // Use a more user-friendly error message or component here
 
   return (
-    <Table classNames={classNames} aria-label="Example static collection table">
+    <Table
+      classNames={classNames}
+      aria-label="Example table with client side pagination"
+      bottomContent={
+        <div className="flex w-full justify-center">
+          <Pagination
+            isCompact
+            showControls
+            showShadow
+            color="warning"
+            page={page}
+            total={pages}
+            onChange={(page) => setPage(page)}
+          />
+        </div>
+      }
+    >
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={users}>
+      <TableBody items={PAGINATED_USERS}>
         {(user) => (
           <TableRow key={user.id}>
             {(columnKey) => (
