@@ -6,14 +6,15 @@ import { UsePaginatedItemsProps } from "../lib/types";
 const usePaginatedItems = <T>({
   queryKey,
   queryFn,
+  rowsPerPage
 }: UsePaginatedItemsProps<T>) => {
+
   const { isLoading, data, error } = useQuery({
     queryKey: queryKey,
     queryFn: queryFn,
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
 
   const totalPages = data ? Math.ceil(data.length / rowsPerPage) : 1;
 
@@ -22,7 +23,7 @@ const usePaginatedItems = <T>({
     const end = start + rowsPerPage;
 
     return data?.slice(start, end);
-  }, [page, data]);
+  }, [page, data, rowsPerPage]);
 
   return { isLoading, error, setPage, paginatedItems, page, totalPages };
 };
