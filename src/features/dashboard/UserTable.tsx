@@ -8,21 +8,22 @@ import {
   User,
   Chip,
   Pagination,
+  Skeleton,
 } from "@nextui-org/react";
 import { useCallback } from "react";
-// import { getUsers } from "../services/apiUsers";
 import { User as TUser, UserKeys } from "../../lib/types";
 import { COLUMNS } from "../../data/constants";
 import { getUsers } from "../../services/apiUsers";
 import usePaginatedItems from "../../hooks/usePaginatedItems";
 
 const UserTable = () => {
+  const rowsPerPage = 5;
   const { error, isLoading, setPage, totalPages, paginatedItems, page } =
     usePaginatedItems({
       queryKey: ["user"],
       queryFn: getUsers,
+      rowsPerPage,
     });
-
   const renderCell = useCallback((user: TUser, columnKey: keyof TUser) => {
     const cellValue = user[columnKey];
 
@@ -30,7 +31,6 @@ const UserTable = () => {
       case UserKeys.STATUS:
         return (
           <Chip
-            className="capitalize"
             color={"success"}
             size="sm"
             variant="flat"
@@ -56,9 +56,16 @@ const UserTable = () => {
     }
   }, []);
 
-  if (isLoading) return <p>Loading...</p>; // Use a loading spinner here
   if (error) return <p>Something went wrong...</p>; // Use a more user-friendly error message or component here
-
+  const skeletonRows = Array.from({ length: rowsPerPage }).map((_, index) => (
+    <TableRow key={index}>
+      {COLUMNS.map((column) => (
+        <TableCell key={column.key}>
+          <Skeleton className="h-10 rounded-lg"></Skeleton>
+        </TableCell>
+      ))}
+    </TableRow>
+  ));
   return (
     <Table
       classNames={{
@@ -83,17 +90,21 @@ const UserTable = () => {
       <TableHeader columns={COLUMNS}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={paginatedItems}>
-        {(user) => (
-          <TableRow key={user.id}>
-            {(columnKey) => (
-              <TableCell>
-                {renderCell(user, columnKey as keyof TUser)}
-              </TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
+      {isLoading ? (
+        <TableBody>{skeletonRows}</TableBody>
+      ) : (
+        <TableBody items={paginatedItems}>
+          {(user) => (
+            <TableRow key={user.id}>
+              {(columnKey) => (
+                <TableCell>
+                  {renderCell(user, columnKey as keyof TUser)}
+                </TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      )}
     </Table>
   );
 };
