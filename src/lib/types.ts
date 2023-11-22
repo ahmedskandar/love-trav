@@ -15,3 +15,8 @@ export enum UserKeys {
   STATUS = "status",
   NAME = "name",
 }
+
+export type UsePaginatedItemsProps<T> = {
+  queryKey: string[];
+  queryFn: () => Promise<T[]>;
+}
