@@ -4,6 +4,7 @@ import { Button, Checkbox, Input, Link } from "@nextui-org/react";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
+import Logo from "../ui/Logo";
 
 const Login = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -12,7 +13,7 @@ const Login = () => {
   return (
     <div className="flex flex-col md:flex-row h-[100svh]">
       <div className="flex basis-1/2 flex-col items-center p-10">
-        <img src="/assets/icons/love-trav.png" className="w-24" alt="" />
+        <Logo />
         <div className="mx-auto w-full max-w-md">
           <h2 className="mt-12 inline-block bg-gradient-to-r from-yellow-500 to-pink-400 bg-clip-text pb-[1.2px] text-3xl font-bold text-transparent">
             Login
@@ -77,7 +78,7 @@ const Login = () => {
               to sign up{" "}
             </p>
           </form>
-        </div>
+        L</div>
       </div>
       <div className="basis-1/2 hidden md:block">
         <img

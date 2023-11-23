@@ -1,6 +1,6 @@
-import { Image } from "@nextui-org/react";
 import UserTable from "./UserTable";
 import { useEffect, useState } from "react";
+import Logo from "../../ui/Logo";
 
 const Dashboard = () => {
   const [slideStyle, setSlideStyle] = useState("");
@@ -10,12 +10,7 @@ const Dashboard = () => {
   return (
     <>
       <header className="flex gap-5 p-5">
-        <Image
-          src="/assets/icons/love-trav.png"
-          alt="LoveTrav Logo"
-          removeWrapper={true}
-          width={80}
-        />
+       <Logo />
         <div
           className={`flex -translate-x-80 flex-col justify-center border-l-3 pl-3 transition duration-500 ${slideStyle}`}
         >

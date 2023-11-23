@@ -4,13 +4,13 @@ import { faGlobe } from "@fortawesome/free-solid-svg-icons/faGlobe";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
-  Image,
   Link,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
 } from "@nextui-org/react";
+import Logo from "../ui/Logo";
 
 const Home = () => {
   return (
@@ -18,13 +18,7 @@ const Home = () => {
       <div className="absolute left-0 top-0 h-full w-full bg-black/60 xl:hidden"></div>
       <header className=" left-0 top-0 z-40 w-full">
         <div className="mx-auto flex max-w-xl items-center justify-between p-5 lg:max-w-2xl xl:mx-0 xl:max-w-none xl:px-14 xl:py-5">
-          <Image
-            src="/assets/icons/love-trav.png"
-            alt="LoveTrav Logo"
-            removeWrapper={true}
-            width={80}
-          />
-          {/* <div></div> */}
+         <Logo />
           <Dropdown className="bg-black/50 md:hidden">
             <DropdownTrigger className="md:hidden">
               <Button
