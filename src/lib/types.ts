@@ -19,7 +19,11 @@ export enum UserKeys {
 export type UsePaginatedItemsProps<T> = {
   queryKey: string[];
   queryFn: () => Promise<T[]>;
-  rowsPerPage: number
-}
+  rowsPerPage: number;
+};
 
 export type Country = Record<string, string>;
+
+export type FormPrompt = {
+  to: "login" | "signup";
+};
