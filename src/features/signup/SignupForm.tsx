@@ -52,6 +52,7 @@ const SignupForm = () => {
   });
 
   const countryArray = data ? Object.entries(data) : [];
+  const sortedCountryArray = countryArray.sort((a, b) => a[1].localeCompare(b[1]));
 
   const { register } = useForm();
 
@@ -109,7 +110,7 @@ const SignupForm = () => {
         isInvalid={!!error?.message}
         isLoading={isLoading}
         errorMessage={error?.message}
-        items={countryArray}
+        items={sortedCountryArray}
         color="warning"
         label="Nationality"
         labelPlacement="outside"
