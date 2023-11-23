@@ -20,12 +20,18 @@ import {
 
 const UserTable = () => {
   const rowsPerPage = 5;
-  const { error, isLoading, setPage, totalPages, paginatedItems, page } =
-    usePaginatedItems({
-      queryKey: ["user"],
-      queryFn: getUsers,
-      rowsPerPage,
-    });
+  const {
+    error,
+    isLoading,
+    setPage,
+    totalPages,
+    paginatedItems: users,
+    page,
+  } = usePaginatedItems({
+    queryKey: ["user"],
+    queryFn: getUsers,
+    rowsPerPage,
+  });
 
   const renderCell = useCallback((user: TUser, columnKey: keyof TUser) => {
     const cellValue = user[columnKey];
@@ -94,7 +100,7 @@ const UserTable = () => {
       {isLoading ? (
         <TableBody>{skeletonRows}</TableBody>
       ) : (
-        <TableBody emptyContent="No users found" items={paginatedItems}>
+        <TableBody emptyContent="No users found" items={users}>
           {(user) => (
             <TableRow key={user.id}>
               {(columnKey) => (
