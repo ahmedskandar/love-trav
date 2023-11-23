@@ -1,7 +1,7 @@
 import { NextUIProvider } from "@nextui-org/react";
 import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
-import Login from "./features/Login";
+import Login from "./features/login/Login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Dashboard from "./features/dashboard/Dashboard";
