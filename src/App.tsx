@@ -5,6 +5,7 @@ import Login from "./features/login/Login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Dashboard from "./features/dashboard/Dashboard";
+import Signup from "./features/signup/Signup";
 
 function App() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="admin/dashboard" element={<Dashboard />} />
-          <Route path="signup" element={<p>Signup</p>} />{" "}
+          <Route path="signup" element={<Signup />} />
           <Route path="reset" element={<p>Reset</p>} />
           <Route path="app" element={<p>App</p>}>
             <Route index element={<Navigate to={"travels"} replace />} />
