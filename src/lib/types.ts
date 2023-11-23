@@ -21,3 +21,5 @@ export type UsePaginatedItemsProps<T> = {
   queryFn: () => Promise<T[]>;
   rowsPerPage: number
 }
+
+export type Country = Record<string, string>;
