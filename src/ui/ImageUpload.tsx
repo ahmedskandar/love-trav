@@ -21,16 +21,19 @@ registerPlugin(
 const ImageUpload = () => {
   const [file, setFile] = useState<FilePondFile[]>([]);
   return (
-    <FilePond
-      files={file.map((f) => f.file)}
-      allowReorder={false}
-      acceptedFileTypes={["image/*"]}
-      name="image"
-      labelFileTypeNotAllowed="Invalid file type. Please upload an image"
-      allowMultiple={false}
-      onupdatefiles={setFile}
-      labelIdle="Drag & Drop or Browse your desired profile image"
-    />
+    <div className="cursor-pointer">
+      <FilePond
+        required
+        files={file.map((f) => f.file)}
+        allowReorder={false}
+        acceptedFileTypes={["image/*"]}
+        name="image"
+        labelFileTypeNotAllowed="Invalid file type. Please upload an image"
+        allowMultiple={false}
+        onupdatefiles={setFile}
+        labelIdle="Drag & Drop or Browse your desired profile image"
+      />
+    </div>
   );
 };
 
