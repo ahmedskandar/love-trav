@@ -24,6 +24,7 @@ import "filepond/dist/filepond.min.css";
 // Import the Image EXIF Orientation and Image Preview plugins
 // Note: These need to be installed separately
 // `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
@@ -32,7 +33,7 @@ import { useQuery } from "@tanstack/react-query";
 import { type Country } from "../../lib/types";
 
 // Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileValidateType);
 
 const SignupForm = () => {
   const [file, setFile] = useState<FilePondFile[]>([]);
@@ -234,8 +235,10 @@ const SignupForm = () => {
       </Select> */}
       <FilePond
         files={file.map((f) => f.file)}
-        allowReorder={true}
+        allowReorder={false}
+        acceptedFileTypes={["image/*"]}
         name="image"
+        labelFileTypeNotAllowed="Invalid file type. Please upload an image"
         allowMultiple={false}
         onupdatefiles={setFile}
         labelIdle="Drag & Drop or Browse your desired profile image"
