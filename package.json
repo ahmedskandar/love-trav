@@ -20,6 +20,7 @@
     "@tanstack/react-query-devtools": "^5.8.4",
     "eslint-plugin-react": "^7.33.2",
     "filepond": "^4.30.4",
+    "filepond-plugin-file-validate-type": "^1.2.8",
     "filepond-plugin-image-exif-orientation": "^1.0.11",
     "filepond-plugin-image-preview": "^4.6.11",
     "framer-motion": "^10.16.5",
