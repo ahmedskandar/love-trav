@@ -5,6 +5,7 @@ import { Button, Checkbox, Input, Link } from "@nextui-org/react";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
+import FormPrompt from "../../ui/FormPrompt";
 
 const LoginForm = () => {
   const [isEyeVisible, setIsEyeVisible] = useState(false);
@@ -60,13 +61,7 @@ const LoginForm = () => {
       >
         Login
       </Button>
-      <p>
-        Don&apos;t have an account? Click{" "}
-        <Link underline="always" href="/signup" color="foreground">
-          here
-        </Link>{" "}
-        to sign up{" "}
-      </p>
+      <FormPrompt to="signup" />
     </form>
   );
 };
