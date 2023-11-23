@@ -15,29 +15,11 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import { useForm } from "react-hook-form";
 
-// Import React FilePond
-import { FilePond, registerPlugin } from "react-filepond";
-
-// Import FilePond styles
-import "filepond/dist/filepond.min.css";
-
-// Import the Image EXIF Orientation and Image Preview plugins
-// Note: These need to be installed separately
-// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import { FilePondFile } from "filepond";
 import { useQuery } from "@tanstack/react-query";
 import { type Country } from "../../lib/types";
-
-// Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileValidateType);
+import ImageUpload from "../../ui/ImageUpload";
 
 const SignupForm = () => {
-  const [file, setFile] = useState<FilePondFile[]>([]);
-
   const [isEyeVisible, setIsEyeVisible] = useState(false);
   const toggleEyeVisibility = () => setIsEyeVisible(!isEyeVisible);
   const fetchCountries = async () => {
@@ -53,7 +35,9 @@ const SignupForm = () => {
   });
 
   const countryArray = data ? Object.entries(data) : [];
-  const sortedCountryArray = countryArray.sort((a, b) => a[1].localeCompare(b[1]));
+  const sortedCountryArray = countryArray.sort((a, b) =>
+    a[1].localeCompare(b[1]),
+  );
 
   const { register } = useForm();
 
@@ -149,101 +133,10 @@ const SignupForm = () => {
           </SelectItem>
         )}
       </Select>
-      {/* <Select
-        isRequired
-        items={countryArray}
-        color="warning"
-        label="Nationality"
-        className="mb-5"
-        variant="bordered"
-      >
-        {(country) => (
-          <SelectItem
-            key="argentina"
-            startContent={
-              <Avatar
-                alt="Argentina"
-                className="h-6 w-6"
-                src="https://flagcdn.com/ke.svg"
-              />
-            }
-          >
-            Argentina
-          </SelectItem>
-        )}
 
-        <SelectItem
-          key="argentina"
-          startContent={
-            <Avatar
-              alt="Argentina"
-              className="h-6 w-6"
-              src="https://flagcdn.com/ke.svg"
-            />
-          }
-        >
-          Argentina
-        </SelectItem>
-        <SelectItem
-          key="venezuela"
-          startContent={
-            <Avatar
-              alt="Venezuela"
-              className="h-6 w-6"
-              src="https://flagcdn.com/ve.svg"
-            />
-          }
-        >
-          Venezuela
-        </SelectItem>
-        <SelectItem
-          key="brazil"
-          startContent={
-            <Avatar
-              alt="Brazil"
-              className="h-6 w-6"
-              src="https://flagcdn.com/br.svg"
-            />
-          }
-        >
-          Brazil
-        </SelectItem>
-        <SelectItem
-          key="switzerland"
-          startContent={
-            <Avatar
-              alt="Switzerland"
-              className="h-6 w-6"
-              src="https://flagcdn.com/ch.svg"
-            />
-          }
-        >
-          Switzerland
-        </SelectItem>
-        <SelectItem
-          key="germany"
-          startContent={
-            <Avatar
-              alt="Germany"
-              className="h-6 w-6"
-              src="https://flagcdn.com/de.svg"
-            />
-          }
-        >
-          Germany
-        </SelectItem>
-      </Select> */}
-      <FilePond
-        files={file.map((f) => f.file)}
-        allowReorder={false}
-        acceptedFileTypes={["image/*"]}
-        name="image"
-        labelFileTypeNotAllowed="Invalid file type. Please upload an image"
-        allowMultiple={false}
-        onupdatefiles={setFile}
-        labelIdle="Drag & Drop or Browse your desired profile image"
-      />
-      <div className="mb-10 flex justify-between">
+      <ImageUpload />
+
+      <div className="mb-10 mt-5 flex justify-between">
         <Checkbox color="warning">Remember me?</Checkbox>
         <Link href="/reset" color="foreground">
           Forgot password?
