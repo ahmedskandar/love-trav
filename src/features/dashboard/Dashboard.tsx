@@ -25,9 +25,9 @@ const Dashboard = () => {
           <p className="text-gray-500">Ahmed Lukman</p>
         </div>
       </header>
-      <div className="px-5 sm:mx-auto sm:max-w-4xl xl:max-w-6xl">
+      <main className="px-5 my-10 sm:mx-auto sm:max-w-4xl xl:max-w-6xl">
         <UserTable />
-      </div>
+      </main>
     </>
   );
 };
