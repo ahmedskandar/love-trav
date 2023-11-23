@@ -28,7 +28,7 @@ const UserTable = () => {
     paginatedItems: users,
     page,
   } = usePaginatedItems({
-    queryKey: ["user"],
+    queryKey: ["users"],
     queryFn: getUsers,
     rowsPerPage,
   });
