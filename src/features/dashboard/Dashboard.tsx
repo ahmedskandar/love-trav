@@ -22,7 +22,7 @@ const Dashboard = () => {
           <h2 className="bg-gradient-to-tr from-pink-500 to-yellow-500 bg-clip-text font-serif text-lg font-bold text-transparent md:text-xl">
             DASHBOARD
           </h2>
-          <p>Ahmed Lukman</p>
+          <p className="text-gray-500">Ahmed Lukman</p>
         </div>
       </header>
       <div className="px-5 sm:mx-auto sm:max-w-4xl xl:max-w-6xl">
