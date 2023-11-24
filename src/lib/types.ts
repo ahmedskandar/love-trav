@@ -46,6 +46,7 @@ export type FormData = {
   email: string;
   password: string;
   username: string;
+  image: any
 };
 
 export type NationalitySelectProps = {
