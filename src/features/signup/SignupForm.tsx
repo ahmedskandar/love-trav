@@ -1,7 +1,9 @@
 import { useState } from "react";
 
 import ImageUpload from "../../ui/ImageUpload";
+import NationalitySelect from "../../ui/NationalitySelect";
 
+import { FilePondFile } from "filepond";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Input } from "@nextui-org/react";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
@@ -10,11 +12,11 @@ import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import FormPrompt from "../../ui/FormPrompt";
 
-import NationalitySelect from "../../ui/NationalitySelect";
 
 const SignupForm = () => {
   const [isEyeVisible, setIsEyeVisible] = useState(false);
   const toggleEyeVisibility = () => setIsEyeVisible(!isEyeVisible);
+  const [file, setFile] = useState<FilePondFile[]>([]);
 
   const { register, handleSubmit, control, reset } = useForm();
 
@@ -23,6 +25,7 @@ const SignupForm = () => {
     const nationality = Array.from(data.nationality)[0]
     console.log(nationality)
 
+    setFile([])
     reset()
   };
   return (
@@ -78,7 +81,7 @@ const SignupForm = () => {
 
       <NationalitySelect control={control} />
 
-      <ImageUpload />
+      <ImageUpload file={file} setFile={setFile}/>
 
       <Button
         type="submit"

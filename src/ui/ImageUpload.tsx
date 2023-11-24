@@ -8,8 +8,7 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import { FilePondFile } from "filepond";
-import { useState } from "react";
+import { ImageUploadProps } from "../lib/types";
 
 // Register the plugins
 registerPlugin(
@@ -18,8 +17,7 @@ registerPlugin(
   FilePondPluginFileValidateType,
 );
 
-const ImageUpload = () => {
-  const [file, setFile] = useState<FilePondFile[]>([]);
+const ImageUpload = ({ file, setFile }: ImageUploadProps) => {
   return (
     <div className="cursor-pointer">
       <FilePond

@@ -1,3 +1,4 @@
+import { FilePondFile } from "filepond";
 import {
   Control,
   FieldValues,
@@ -48,3 +49,8 @@ export type NationalitySelectProps = {
   register?: UseFormRegister<FieldValues>;
   control: Control<FieldValues, Country>;
 };
+
+export type ImageUploadProps = {
+  file: FilePondFile[];
+  setFile: React.Dispatch<React.SetStateAction<FilePondFile[]>>;
+}
