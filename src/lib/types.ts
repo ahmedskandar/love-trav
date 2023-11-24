@@ -1,3 +1,9 @@
+import {
+  Control,
+  FieldValues,
+  UseFormRegister,
+} from "react-hook-form";
+
 export type User = {
   id: number;
   created_at: string;
@@ -29,11 +35,16 @@ export type FormPrompt = {
 };
 
 export type Children = {
-  children: React.ReactNode
+  children: React.ReactNode;
 };
 
 export type ClassName = {
-  className?: string
-}
+  className?: string;
+};
 
-export type Heading = Children & ClassName
+export type Heading = Children & ClassName;
+
+export type NationalitySelectProps = {
+  register?: UseFormRegister<FieldValues>;
+  control: Control<FieldValues, Country>;
+};
