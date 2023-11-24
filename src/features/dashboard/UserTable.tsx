@@ -49,7 +49,7 @@ const UserTable = () => {
           <User
             avatarProps={{
               radius: "lg",
-              src: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+              src: user.image,
             }}
             description={user.email}
             name={user.username}
