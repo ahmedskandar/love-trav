@@ -1,9 +1,5 @@
 import { FilePondFile } from "filepond";
-import {
-  Control,
-  FieldValues,
-  UseFormRegister,
-} from "react-hook-form";
+import { Control, UseFormRegister } from "react-hook-form";
 
 export type User = {
   id: number;
@@ -45,12 +41,19 @@ export type ClassName = {
 
 export type Heading = Children & ClassName;
 
+export type FormData = {
+  nationality: string;
+  email: string;
+  password: string;
+  username: string;
+};
+
 export type NationalitySelectProps = {
-  register?: UseFormRegister<FieldValues>;
-  control: Control<FieldValues, Country>;
+  register?: UseFormRegister<FormData>;
+  control: Control<FormData>;
 };
 
 export type ImageUploadProps = {
   file: FilePondFile[];
   setFile: React.Dispatch<React.SetStateAction<FilePondFile[]>>;
-}
+};
