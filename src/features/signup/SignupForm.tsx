@@ -9,25 +9,48 @@ import { Button, Input } from "@nextui-org/react";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import FormPrompt from "../../ui/FormPrompt";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createUser, getUsers } from "../../services/apiUsers";
+import { useQuery } from "@tanstack/react-query";
+import { FormData } from "../../lib/types";
 
 const SignupForm = () => {
   const [isEyeVisible, setIsEyeVisible] = useState(false);
   const toggleEyeVisibility = () => setIsEyeVisible(!isEyeVisible);
   const [file, setFile] = useState<FilePondFile[]>([]);
 
-  const { register, handleSubmit, control, reset } = useForm();
+  const { register, handleSubmit, control, reset } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    //eslint-disable-next-line
-    const nationality = Array.from(data.nationality)[0]
-    console.log(nationality)
+  const queryClient = useQueryClient();
+const { refetch } = useQuery({
+  queryKey: ["users"],
+  queryFn: getUsers,
+});
 
-    setFile([])
-    reset()
+  const { mutate, isPending } = useMutation({
+    mutationFn: createUser,
+    onSuccess: () => {
+      alert("Yepee, successfully created");
+      // eslint-disable-next-line
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      reset();
+      setFile([]);
+      // eslint-disable-next-line
+      refetch(); //Manual refetch on success
+    },
+    onError: (e) => alert(e.message),
+  });
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    const nationality = Array.from(data.nationality)[0];
+    const userData = { ...data, nationality };
+
+    // console.log(userData);
+    mutate(userData);
   };
+
   return (
     //eslint-disable-next-line
     <form className="mt-8" onSubmit={handleSubmit(onSubmit)}>
@@ -81,9 +104,10 @@ const SignupForm = () => {
 
       <NationalitySelect control={control} />
 
-      <ImageUpload file={file} setFile={setFile}/>
+      <ImageUpload file={file} setFile={setFile} />
 
       <Button
+        isLoading={isPending}
         type="submit"
         radius="sm"
         className="mb-3 w-full bg-gradient-to-tr from-pink-500 to-yellow-500 font-bold text-white"

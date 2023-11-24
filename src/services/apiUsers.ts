@@ -13,11 +13,21 @@ export const getUsers = async () => {
 };
 
 export const deleteUser = async (id: number) => {
-  const { data, error } = await supabase.from("users").delete().eq("id", id);
+  const { error } = await supabase.from("users").delete().eq("id", id);
 
   if (error) {
     throw new Error("Account could not be deleted, please try again");
   }
 
-  return data;
+};
+
+export const createUser = async (newUser: {username: string, email: string, password: string, nationality: string}) => {
+  const { error } = await supabase
+    .from("users")
+    .insert([newUser])
+
+  if (error) {
+    throw new Error("User could not be deleted, please try again");
+  }
+
 };
