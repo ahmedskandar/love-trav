@@ -1,3 +1,4 @@
+import Heading from "../../ui/Heading";
 import Logo from "../../ui/Logo";
 import SignupForm from "./SignupForm";
 
@@ -14,9 +15,7 @@ const Signup = () => {
       <div className="flex basis-1/2 flex-col items-center p-10 md:h-[100svh] md:overflow-y-scroll">
         <Logo />
         <div className="mx-auto w-full max-w-md">
-          <h2 className="mt-12 inline-block bg-gradient-to-r from-yellow-500 to-pink-400 bg-clip-text pb-[1.2px] text-3xl font-bold text-transparent">
-            Signup
-          </h2>
+          <Heading className="mt-8">SignUp</Heading>
           <SignupForm />
         </div>
       </div>

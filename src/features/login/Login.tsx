@@ -1,3 +1,4 @@
+import Heading from "../../ui/Heading";
 import Logo from "../../ui/Logo";
 import LoginForm from "./LoginForm";
 
@@ -7,9 +8,7 @@ const Login = () => {
       <div className="flex basis-1/2 flex-col items-center p-10">
         <Logo />
         <div className="mx-auto w-full max-w-md">
-          <h2 className="mt-12 inline-block bg-gradient-to-r from-yellow-500 to-pink-400 bg-clip-text pb-[1.2px] text-3xl font-bold text-transparent">
-            Login
-          </h2>
+          <Heading className="mt-8">Login</Heading>
           <LoginForm />
         </div>
       </div>
