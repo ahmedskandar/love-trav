@@ -9,7 +9,7 @@ import { Button, Input } from "@nextui-org/react";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import FormPrompt from "../../ui/FormPrompt";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createUser, getUsers } from "../../services/apiUsers";
@@ -24,10 +24,10 @@ const SignupForm = () => {
   const { register, handleSubmit, control, reset } = useForm<FormData>();
 
   const queryClient = useQueryClient();
-const { refetch } = useQuery({
-  queryKey: ["users"],
-  queryFn: getUsers,
-});
+  const { refetch } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: createUser,
@@ -45,15 +45,17 @@ const { refetch } = useQuery({
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     const nationality = Array.from(data.nationality)[0];
-    const userData = { ...data, nationality };
+    const userData: FormData = { ...data, nationality, image: file[0].file };
 
-    // console.log(userData);
+    // eslint-disable-next-line
     mutate(userData);
   };
 
+  const onerror: SubmitErrorHandler<FormData> = (e) => console.log(e);
+
   return (
     //eslint-disable-next-line
-    <form className="mt-8" onSubmit={handleSubmit(onSubmit)}>
+    <form className="mt-8" onSubmit={handleSubmit(onSubmit, onerror)}>
       <Input
         {...register("username")}
         isRequired
