@@ -62,7 +62,7 @@ const UserTable = () => {
     }
   }, []);
 
-  if (error) return <p>Something went wrong...</p>; // Use a more user-friendly error message or component here
+  if (error) return <p>Something went wrong...</p>;
 
   const skeletonRows = Array.from({ length: rowsPerPage }).map((_, index) => (
     <TableRow key={index}>
