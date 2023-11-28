@@ -32,3 +32,32 @@ export const logout = async () => {
   const { error } = await supabase.auth.signOut();
   if (error) throw new Error(error.message);
 };
+
+export const signup = async ({
+  username,
+  email,
+  password,
+  nationality
+}: {
+  username: string;
+  email: string;
+  password: string;
+  nationality: string
+}) => {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      //Add optional data into the newly created user
+      data: {
+        username,
+        nationality,
+        avatar: "",
+      },
+    },
+  });
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};
