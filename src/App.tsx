@@ -29,6 +29,7 @@ function App() {
           <Route path="signup" element={<Signup />} />
           <Route path="reset" element={<p>Reset</p>} />
           <Route path="admin/dashboard" element={<Dashboard />} />
+          <Route path="verify" element={<p>You have successfully verified your email, click this button to go to the login page</p>} />
           <Route
             path="app"
             element={
