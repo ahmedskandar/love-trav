@@ -21,7 +21,6 @@ const ImageUpload = ({ file, setFile }: ImageUploadProps) => {
   return (
     <div className="cursor-pointer">
       <FilePond
-        required
         files={file.map((f) => f.file)}
         allowReorder={false}
         acceptedFileTypes={["image/*"]}
