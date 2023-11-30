@@ -7,6 +7,7 @@ export const login = async ({
   email: string;
   password: string;
 }) => {
+  // localStorage.setItem('remember', remember.toString())
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -49,7 +50,7 @@ export const signup = async ({
   const imageName = `${Math.random()}-${image.name}`.replace("/", "");
   const imagePath = `${supabaseUrl}/storage/v1/object/public/avatars/${imageName}`;
   // 1. Create user
-  const { error } = await supabase.auth.signUp({
+  const { error, data } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -57,19 +58,22 @@ export const signup = async ({
       data: {
         username,
         nationality,
-        avatar: imagePath,
+        avatar: image.name !== undefined ? imagePath : "",
       },
     },
   });
+  console.log(data)
+
+  if (error) throw new Error(error.message);
 
   // 2. Upload image
   // Upload file using standard upload
+  if(image.name === undefined) return
   const { error: storageError } = await supabase.storage
     .from("avatars")
     .upload(imageName, image);
   if (storageError)
     throw new Error("Image could not be uploaded, please try again");
 
-  if (error) throw new Error(error.message);
 
 };

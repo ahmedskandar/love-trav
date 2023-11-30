@@ -22,7 +22,6 @@ const SignupForm = () => {
   const toggleConfirmPassEyeVisibility = () =>
     setIsConfirmPassEyeVisible(!isConfirmPassEyeVisible);
   const [file, setFile] = useState<FilePondFile[]>([]);
-
   const {
     register,
     handleSubmit,
@@ -37,7 +36,7 @@ const SignupForm = () => {
 
   const onSubmit = (data: FormData) => {
     const nationality = Array.from(data.nationality)[0];
-    const userData: FormData = { ...data, nationality, image: file[0].file };
+    const userData: FormData = { ...data, nationality, image: file[0]?.file as File || "" };
     signup(userData, {
       onSuccess: () => {
         setFile([]);

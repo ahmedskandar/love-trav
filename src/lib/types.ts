@@ -57,7 +57,8 @@ export const signUpSchema = z
 
 export const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6, "Password length must be greater than 6")
+  password: z.string().min(6, "Password length must be greater than 6"),
+  remember: z.boolean()
 })
 
 export type TLoginSchema = z.infer<typeof loginSchema>
@@ -67,7 +68,7 @@ export type FormData = {
   email: string;
   password: string;
   username: string;
-  image: any
+  image: File
   confirmPassword: string,
 };
 

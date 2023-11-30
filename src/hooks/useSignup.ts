@@ -7,9 +7,8 @@ export const useSignup = () => {
   const navigate = useNavigate()
   const { mutate: signup, isPending } = useMutation({
     mutationFn: signupAPI,
-    //fix onsuccess here and when its used: just use 1 which is here
     onSuccess: () => {
-      toast.success("Account successfully created");
+      toast.success("Account successfully created! Please verify your email to be able to use our services");
       navigate('/login')
     },
     onError: (error) => toast.error(error.message),

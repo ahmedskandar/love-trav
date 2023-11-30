@@ -7,7 +7,7 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import FormPrompt from "../../ui/FormPrompt";
 import { useLogin } from "../../hooks/useLogin";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TLoginSchema, loginSchema } from "../../lib/types";
 
@@ -20,6 +20,7 @@ const LoginForm = () => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<TLoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -71,7 +72,21 @@ const LoginForm = () => {
         type={isEyeVisible ? "text" : "password"}
       />
       <div className="mb-10 flex justify-between">
-        <Checkbox color="warning">Remember me?</Checkbox>
+        <Controller
+          name="remember"
+          control={control}
+          defaultValue = {false}
+          render={({ field }) => (
+            <Checkbox
+              color="warning"
+              onValueChange={field.onChange}
+              isSelected={field.value}
+            >
+              Remember me?
+            </Checkbox>
+          )}
+        />
+
         <Link href="/reset" color="foreground">
           Forgot password?
         </Link>
