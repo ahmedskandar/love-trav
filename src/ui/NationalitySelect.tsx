@@ -1,7 +1,7 @@
-import { Country, NationalitySelectProps } from "../lib/types";
+import { NationalitySelectProps } from "../lib/types";
 
 import { Select, SelectItem, Avatar } from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query";
 import { Controller } from "react-hook-form";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import {useState} from 'react'

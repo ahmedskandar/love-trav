@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Dashboard from "./features/dashboard/Dashboard";
 import Signup from "./features/signup/Signup";
 import ProtectedRoute from "./ui/ProtectedRoute";
+import Chat from "./ui/Chat";
 
 function App() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ function App() {
             path="app"
             element={
               <ProtectedRoute>
-                <p>App</p>
+                <Chat />
               </ProtectedRoute>
             }
           >
