@@ -6,30 +6,54 @@ import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import FormPrompt from "../../ui/FormPrompt";
+import { useLogin } from "../../hooks/useLogin";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TLoginSchema, loginSchema } from "../../lib/types";
 
 const LoginForm = () => {
   const [isEyeVisible, setIsEyeVisible] = useState(false);
   const toggleEyeVisibility = () => setIsEyeVisible(!isEyeVisible);
+  const { login, isPending } = useLogin();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TLoginSchema>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data: TLoginSchema) => {
+    login({ email: data.email, password: data.password }, {
+      onSuccess: () => reset()
+    });
+  };
+
   return (
-    <form className="mt-8">
+    //eslint-disable-next-line
+    <form className="mt-8" onSubmit={handleSubmit(onSubmit)}>
       <Input
         isRequired
+        {...register("email")}
         type="email"
         variant="bordered"
-        isInvalid={false}
-        errorMessage=""
+        isInvalid={!!errors.email}
+        errorMessage={errors.email?.message}
         label="Email"
         className="mb-5 placeholder:text-black"
         color="warning"
         endContent={<FontAwesomeIcon color="lightgray" icon={faEnvelope} />}
       />
       <Input
+        {...register("password")}
         className="mb-5"
         label="Password"
         color="warning"
         isRequired
-        isInvalid={false}
-        errorMessage=""
+        isInvalid={!!errors.password}
+        errorMessage={errors.password?.message}
         variant="bordered"
         endContent={
           <button
@@ -53,9 +77,9 @@ const LoginForm = () => {
         </Link>
       </div>
       <Button
-        as={Link}
+        isLoading={isPending}
+        type="submit"
         size="lg"
-        href="/app/travels"
         radius="sm"
         className="mb-3 w-full bg-gradient-to-tr from-pink-500 to-yellow-500 font-bold text-white focus:border-none"
       >
