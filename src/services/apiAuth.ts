@@ -1,4 +1,4 @@
-import supabase from "./supabase";
+import supabase, { supabaseUrl } from "./supabase";
 
 export const login = async ({
   email,
@@ -7,14 +7,13 @@ export const login = async ({
   email: string;
   password: string;
 }) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) throw new Error(error.message);
 
-  return data;
 };
 
 export const getCurrentUser = async () => {
@@ -37,14 +36,19 @@ export const signup = async ({
   username,
   email,
   password,
-  nationality
+  nationality,
+  image,
 }: {
   username: string;
   email: string;
   password: string;
-  nationality: string
+  nationality: string;
+  image: File;
 }) => {
-  const { data, error } = await supabase.auth.signUp({
+  const imageName = `${Math.random()}-${image.name}`.replace("/", "");
+  const imagePath = `${supabaseUrl}/storage/v1/object/public/avatars/${imageName}`;
+  // 1. Create user
+  const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -52,12 +56,19 @@ export const signup = async ({
       data: {
         username,
         nationality,
-        avatar: "",
+        avatar: imagePath,
       },
     },
   });
 
+  // 2. Upload image
+  // Upload file using standard upload
+  const { error: storageError } = await supabase.storage
+    .from("avatars")
+    .upload(imageName, image);
+  if (storageError)
+    throw new Error("Image could not be uploaded, please try again");
+
   if (error) throw new Error(error.message);
 
-  return data;
 };
