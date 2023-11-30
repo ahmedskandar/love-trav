@@ -22,6 +22,7 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <NextUIProvider navigate={navigate}>
         <Routes>
+          {/* Implement redirect route for those who have logged in */}
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
