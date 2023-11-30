@@ -1,4 +1,4 @@
-import UserTable from "./UserTable";
+// import UserTable from "./UserTable";
 import { useEffect, useState } from "react";
 import Logo from "../../ui/Logo";
 import Heading from "../../ui/Heading";
@@ -20,7 +20,7 @@ const Dashboard = () => {
         </div>
       </header>
       <main className="px-5 my-10 sm:mx-auto sm:max-w-4xl xl:max-w-6xl">
-        <UserTable />
+        {/* <UserTable /> */}
       </main>
     </>
   );
