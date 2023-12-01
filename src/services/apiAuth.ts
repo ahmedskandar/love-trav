@@ -12,10 +12,8 @@ export const login = async ({
     email,
     password,
   });
-
   if (error) throw new Error(error.message);
-  return data
-
+  return data;
 };
 
 export const getCurrentUser = async () => {
@@ -47,6 +45,7 @@ export const signup = async ({
   nationality: string;
   image: File;
 }) => {
+  
   const imageName = `${Math.random()}-${image.name}`.replace("/", "");
   const imagePath = `${supabaseUrl}/storage/v1/object/public/avatars/${imageName}`;
   // 1. Create user
@@ -62,18 +61,18 @@ export const signup = async ({
       },
     },
   });
-  console.log(data)
 
+
+  if (data?.user?.identities?.length === 0)
+    throw new Error("Account already registered");
   if (error) throw new Error(error.message);
 
   // 2. Upload image
   // Upload file using standard upload
-  if(image.name === undefined) return
+  if (image.name === undefined) return;
   const { error: storageError } = await supabase.storage
     .from("avatars")
     .upload(imageName, image);
   if (storageError)
     throw new Error("Image could not be uploaded, please try again");
-
-
 };
