@@ -4,10 +4,14 @@ import Home from "./pages/Home";
 import Login from "./features/login/Login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Dashboard from "./features/dashboard/Dashboard";
 import Signup from "./features/signup/Signup";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import Chat from "./ui/Chat";
+import Reset from "./pages/Reset";
+import Update from "./pages/Update";
+import Travels from "./ui/Travels";
+import ProtectedRoute2 from "./ui/ProtectedRoute2";
+import Verify from "./ui/Verify";
 
 function App() {
   const navigate = useNavigate();
@@ -24,12 +28,16 @@ function App() {
       <NextUIProvider navigate={navigate}>
         <Routes>
           {/* Implement redirect route for those who have logged in */}
-          <Route path="/" element={<Home />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
-          <Route path="reset" element={<p>Reset</p>} />
-          <Route path="admin/dashboard" element={<Dashboard />} />
-          <Route path="verify" element={<p>You have successfully verified your email, click this button to go to the login page</p>} />
+          <Route path="verify" element={<Verify />} />
+          <Route path="update" element={<Update />} />
+          <Route path="/" element={<ProtectedRoute2 />}>
+            <Route index element={<Home />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+            <Route path="reset" element={<Reset />} />
+          </Route>
+          {/* <Route path="redirect" element={<Redirect />} /> */}
+
           <Route
             path="app"
             element={
@@ -40,7 +48,7 @@ function App() {
           >
             <Route index element={<Navigate to={"travels"} replace />} />
             <Route path="form" element={<p>Form</p>} />
-            <Route path="travels" element={<p>Travels</p>} />
+            <Route path="travels" element={<Travels />} />
           </Route>
           <Route path="*" element={<p>404, No page found</p>} />
         </Routes>

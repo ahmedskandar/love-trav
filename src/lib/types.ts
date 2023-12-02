@@ -63,6 +63,24 @@ export const loginSchema = z.object({
 
 export type TLoginSchema = z.infer<typeof loginSchema>
 
+export const resetSchema = z.object({
+  email: z.string().email()
+})
+
+export type TResetSchema = z.infer<typeof resetSchema>
+
+export const updateSchema = z
+  .object({
+    password: z.string().min(6, "Password length must be greater than 6"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
+  });
+
+export type TUpdateSchema = z.infer<typeof updateSchema>
+
 export type FormData = {
   nationality: string;
   email: string;

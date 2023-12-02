@@ -27,9 +27,12 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: TLoginSchema) => {
-    login({ email: data.email, password: data.password }, {
-      onSuccess: () => reset()
-    });
+    login(
+      { email: data.email, password: data.password },
+      {
+        onSuccess: () => reset(),
+      },
+    );
   };
 
   return (
@@ -75,7 +78,7 @@ const LoginForm = () => {
         <Controller
           name="remember"
           control={control}
-          defaultValue = {false}
+          defaultValue={false}
           render={({ field }) => (
             <Checkbox
               color="warning"

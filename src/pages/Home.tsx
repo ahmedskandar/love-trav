@@ -13,12 +13,13 @@ import {
 import Logo from "../ui/Logo";
 
 const Home = () => {
+
   return (
     <div className="relative flex min-h-[100svh] flex-col bg-[url(https://images.unsplash.com/photo-1589519160732-57fc498494f8?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)] bg-cover bg-top">
       <div className="absolute left-0 top-0 h-full w-full bg-black/60 xl:hidden"></div>
       <header className=" left-0 top-0 z-40 w-full">
         <div className="mx-auto flex max-w-xl items-center justify-between p-5 lg:max-w-2xl xl:mx-0 xl:max-w-none xl:px-14 xl:py-5">
-         <Logo />
+          <Logo />
           <Dropdown className="bg-black/50 md:hidden">
             <DropdownTrigger className="md:hidden">
               <Button
