@@ -1,4 +1,4 @@
-import { TLoginSchema, TResetSchema, TUpdateSchema } from "../lib/types";
+import { TLoginSchema, TResetSchema } from "../lib/types";
 import supabase, { supabaseUrl } from "./supabase";
 
 export const login = async ({
@@ -78,7 +78,7 @@ export const reset = async ({ email }: TResetSchema) => {
   if (error) throw new Error(error.message);
 };
 
-export const update = async({password}: TUpdateSchema) => {
+export const update = async({password}: {password: string}) => {
    const { error } = await supabase.auth.updateUser({
      password: password,
    });
