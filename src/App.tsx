@@ -1,17 +1,17 @@
-import { NextUIProvider } from "@nextui-org/react";
 import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./features/login/Login";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Signup from "./features/signup/Signup";
-import ProtectedRoute from "./ui/ProtectedRoute";
-import Chat from "./ui/Chat";
+
 import Reset from "./pages/Reset";
+import Home from "./pages/Home";
 import Update from "./pages/Update";
-import Travels from "./ui/Travels";
-import ProtectedRoute2 from "./ui/ProtectedRoute2";
-import Verify from "./ui/Verify";
+import Verify from "./pages/Verify";
+import LoggedInProtection from "./ui/LoggedInProtection";
+import NotLoggedInProtection from "./ui/NotLoggedInProtection";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { NextUIProvider } from "@nextui-org/react";
 
 function App() {
   const navigate = useNavigate();
@@ -27,28 +27,25 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <NextUIProvider navigate={navigate}>
         <Routes>
-          {/* Implement redirect route for those who have logged in */}
           <Route path="verify" element={<Verify />} />
-          <Route path="update" element={<Update />} />
-          <Route path="/" element={<ProtectedRoute2 />}>
+          <Route path="/profile/update" element={<Update />} />
+          <Route path="/" element={<LoggedInProtection />}>
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="reset" element={<Reset />} />
           </Route>
-          {/* <Route path="redirect" element={<Redirect />} /> */}
-
           <Route
             path="app"
             element={
-              <ProtectedRoute>
-                <Chat />
-              </ProtectedRoute>
+              <NotLoggedInProtection>
+                <p>Chattt</p>
+              </NotLoggedInProtection>
             }
           >
             <Route index element={<Navigate to={"travels"} replace />} />
             <Route path="form" element={<p>Form</p>} />
-            <Route path="travels" element={<Travels />} />
+            <Route path="travels" element={<p>Travels</p>} />
           </Route>
           <Route path="*" element={<p>404, No page found</p>} />
         </Routes>

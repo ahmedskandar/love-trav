@@ -1,17 +1,18 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Spinner } from "@nextui-org/react";
 import { useUser } from "../hooks/useUser";
+import { Children } from "../lib/types";
 
-const ProtectedRoute2 = () => {
+const NotLoggedInProtection = ({ children }: Children) => {
   const navigate = useNavigate();
   //Load the authenticated user
   const { isPending, isAuthenticated } = useUser();
 
   //If no authenticated user, redirect
   useEffect(() => {
-    if (isAuthenticated && !isPending) navigate("/app/travels", {replace: true});
+    if (!isAuthenticated && !isPending) navigate("/login");
   }, [isAuthenticated, isPending, navigate]);
 
   if (isPending)
@@ -21,7 +22,7 @@ const ProtectedRoute2 = () => {
       </div>
     );
 
-  return !isAuthenticated && <Outlet />;
+  return isAuthenticated && children; 
 };
 
-export default ProtectedRoute2;
+export default NotLoggedInProtection;

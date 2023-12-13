@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { update as updateAPI} from "../services/apiAuth";
+import { update as updateAPI } from "../../services/apiAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 

@@ -2,17 +2,17 @@ import { useState } from "react";
 
 import ImageUpload from "../../ui/ImageUpload";
 import NationalitySelect from "../../ui/NationalitySelect";
+import FormPrompt from "../../ui/FormPrompt";
+import { TSignUpSchema, signUpSchema } from "../../lib/types";
+import { useSignup } from "./useSignup";
 
 import { FilePondFile } from "filepond";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Input } from "@nextui-org/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import { useForm } from "react-hook-form";
-import FormPrompt from "../../ui/FormPrompt";
-import { FormData, signUpSchema } from "../../lib/types";
-import { useSignup } from "../../hooks/useSignup";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const SignupForm = () => {
@@ -21,22 +21,29 @@ const SignupForm = () => {
   const togglePassEyeVisibility = () => setIsPassEyeVisible(!isPassEyeVisible);
   const toggleConfirmPassEyeVisibility = () =>
     setIsConfirmPassEyeVisible(!isConfirmPassEyeVisible);
-  const [file, setFile] = useState<FilePondFile[]>([]);
+
+  const [file, setFile] = useState<FilePondFile[]>([]); //State stored separately because problems arise with using react hook form
+
   const {
     register,
     handleSubmit,
     control,
     reset,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<TSignUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
 
   const { signup, isPending } = useSignup();
 
-  const onSubmit = (data: FormData) => {
-    const nationality = Array.from(data.nationality)[0];
-    const userData: FormData = { ...data, nationality, image: file[0]?.file as File || "" };
+  const onSubmit = (data: TSignUpSchema) => {
+    console.log("something haped")
+    const nationality = Array.from(data.nationality)[0]; //Nationality returns a set, converts the set to array and takes the first element
+    const userData = {
+      ...data,
+      nationality,
+      image: (file[0]?.file as File) || "",
+    };
     signup(userData, {
       onSuccess: () => {
         setFile([]);
@@ -121,11 +128,8 @@ const SignupForm = () => {
         }
         type={isConfirmPassEyeVisible ? "text" : "password"}
       />
-
       <NationalitySelect formError={errors} control={control} />
-
       <ImageUpload file={file} setFile={setFile} />
-
       <Button
         isLoading={isPending}
         type="submit"
@@ -134,7 +138,6 @@ const SignupForm = () => {
       >
         Sign up
       </Button>
-
       <FormPrompt to="login" />
     </form>
   );

@@ -1,13 +1,10 @@
+import { TLoginSchema, TResetSchema, TUpdateSchema } from "../lib/types";
 import supabase, { supabaseUrl } from "./supabase";
 
 export const login = async ({
   email,
   password,
-}: {
-  email: string;
-  password: string;
-}) => {
-  // localStorage.setItem('remember', remember.toString())
+}: TLoginSchema) => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -39,13 +36,14 @@ export const signup = async ({
   nationality,
   image,
 }: {
-  username: string;
-  email: string;
-  password: string;
   nationality: string;
   image: File;
+  email: string;
+  password: string;
+  username: string;
+  confirmPassword: string;
 }) => {
-  const imageName = `${Math.random()}-${image.name}`.replace("/", "");
+  const imageName = `${Math.random()}-${image?.name}`.replace("/", "");
   const imagePath = `${supabaseUrl}/storage/v1/object/public/avatars/${imageName}`;
   // 1. Create user
   const { error, data } = await supabase.auth.signUp({
@@ -75,12 +73,12 @@ export const signup = async ({
     throw new Error("Image could not be uploaded, please try again");
 };
 
-export const reset = async ({ email }: { email: string }) => {
+export const reset = async ({ email }: TResetSchema) => {
   const { error } = await supabase.auth.resetPasswordForEmail(email);
   if (error) throw new Error(error.message);
 };
 
-export const update = async({password}: {password: string}) => {
+export const update = async({password}: TUpdateSchema) => {
    const { error } = await supabase.auth.updateUser({
      password: password,
    });

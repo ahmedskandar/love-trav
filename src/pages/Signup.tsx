@@ -1,6 +1,6 @@
-import Heading from "../../ui/Heading";
-import Logo from "../../ui/Logo";
-import SignupForm from "./SignupForm";
+import Heading from "../ui/Heading";
+import Logo from "../ui/Logo";
+import SignupForm from "../features/signup/SignupForm";
 
 const Signup = () => {
   return (

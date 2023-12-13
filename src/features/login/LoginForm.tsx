@@ -1,15 +1,16 @@
 import { useState } from "react";
 
+import FormPrompt from "../../ui/FormPrompt";
+import { useLogin } from "./useLogin";
+import { TLoginSchema, loginSchema } from "../../lib/types";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Checkbox, Input, Link } from "@nextui-org/react";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
-import FormPrompt from "../../ui/FormPrompt";
-import { useLogin } from "../../hooks/useLogin";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TLoginSchema, loginSchema } from "../../lib/types";
 
 const LoginForm = () => {
   const [isEyeVisible, setIsEyeVisible] = useState(false);
@@ -30,7 +31,7 @@ const LoginForm = () => {
     login(
       { email: data.email, password: data.password },
       {
-        onSuccess: () => reset(),
+        onSuccess: void reset(),
       },
     );
   };

@@ -2,31 +2,31 @@ import { FilePondFile } from "filepond";
 import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { z } from "zod";
 
-export type User = {
-  id: number;
-  created_at: string;
-  username: string;
-  password: string;
-  nationality: string;
-  notes: string;
-  image: string;
-  email: string;
-  name: string;
-  status: "Online" | "Offline";
-};
+// export type User = {
+//   id: number;
+//   created_at: string;
+//   username: string;
+//   password: string;
+//   nationality: string;
+//   notes: string;
+//   image: string;
+//   email: string;
+//   name: string;
+//   status: "Online" | "Offline";
+// };
 
-export enum UserKeys {
-  STATUS = "status",
-  NAME = "name",
-}
+// export enum UserKeys {
+//   STATUS = "status",
+//   NAME = "name",
+// }
 
-export type UsePaginatedItemsProps<T> = {
-  queryKey: string[];
-  queryFn: () => Promise<T[]>;
-  rowsPerPage: number;
-};
+// export type UsePaginatedItemsProps<T> = {
+//   queryKey: string[];
+//   queryFn: () => Promise<T[]>;
+//   rowsPerPage: number;
+// };
 
-export type Country = Record<string, string>;
+// export type Country = Record<string, string>;
 
 export type FormPrompt = {
   to: "login" | "signup";
@@ -41,7 +41,14 @@ export type ClassName = {
 };
 
 export type Heading = Children & ClassName;
-
+export type FormData = {
+  nationality: string;
+  email: string;
+  password: string;
+  username: string;
+  image: File;
+  confirmPassword: string;
+};
 export const signUpSchema = z
   .object({
     email: z.string().email(),
@@ -55,19 +62,21 @@ export const signUpSchema = z
     path: ["confirmPassword"],
   });
 
+export type TSignUpSchema = z.infer<typeof signUpSchema>;
+
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6, "Password length must be greater than 6"),
-  remember: z.boolean()
-})
+  remember: z.boolean().optional(),
+});
 
-export type TLoginSchema = z.infer<typeof loginSchema>
+export type TLoginSchema = z.infer<typeof loginSchema>;
 
 export const resetSchema = z.object({
-  email: z.string().email()
-})
+  email: z.string().email(),
+});
 
-export type TResetSchema = z.infer<typeof resetSchema>
+export type TResetSchema = z.infer<typeof resetSchema>;
 
 export const updateSchema = z
   .object({
@@ -79,21 +88,12 @@ export const updateSchema = z
     path: ["confirmPassword"],
   });
 
-export type TUpdateSchema = z.infer<typeof updateSchema>
-
-export type FormData = {
-  nationality: string;
-  email: string;
-  password: string;
-  username: string;
-  image: File
-  confirmPassword: string,
-};
+export type TUpdateSchema = z.infer<typeof updateSchema>;
 
 export type NationalitySelectProps = {
-  register?: UseFormRegister<FormData>;
-  control: Control<FormData>;
-  formError: FieldErrors<FormData>;
+  register?: UseFormRegister<TSignUpSchema>;
+  control: Control<TSignUpSchema>;
+  formError: FieldErrors<TSignUpSchema>;
 };
 
 export type ImageUploadProps = {

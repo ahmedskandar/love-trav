@@ -1,13 +1,14 @@
-import React from "react";
+import { useState, useCallback, useEffect } from "react";
 
 export const useCountries = ({ fetchDelay = 0 }) => {
-  const [items, setItems] = React.useState<{key: string, value: string}[]>([]);
-  const [hasMore, setHasMore] = React.useState(true);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [offset, setOffset] = React.useState(0);
+  const [items, setItems] = useState<{ key: string; value: string }[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [offset, setOffset] = useState(0);
   const limit = 20; // Number of items per page, adjust as necessary
 
-  const loadCountries = React.useCallback(async () => {
+  const loadCountries = useCallback(async () => {
     try {
       const controller = new AbortController();
       const { signal } = controller;
@@ -21,15 +22,19 @@ export const useCountries = ({ fetchDelay = 0 }) => {
       if (!res.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await res.json() as Record<string, string>;
+      const data = (await res.json()) as Record<string, string>;
+      //Converts object into an array of objects, where each object in the array represents a key-value pair from the original object.
       const dataArray = Object.entries(data).map(([key, value]) => ({
         key,
         value,
       }));
 
+      dataArray.sort((a, b) => a.value.localeCompare(b.value));
+
       const paginatedItems = dataArray.slice(offset, offset + limit);
 
       setHasMore(offset + limit < dataArray.length);
+
       setItems((prevItems) => {
         const combinedItems = [...prevItems, ...paginatedItems];
         const uniqueItemsSet = new Set(combinedItems.map((item) => item.key));
@@ -39,24 +44,22 @@ export const useCountries = ({ fetchDelay = 0 }) => {
 
         return uniqueItemsArray as { key: string; value: string }[];
       });
+
     } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
-        console.log("Fetch aborted");
-      } else {
-        console.error("There was an error with the fetch operation:", error);
+      if (error instanceof Error && error.name !== "AbortError") {
+        setError(error.message);
       }
     } finally {
       setIsLoading(false);
     }
   }, [offset, fetchDelay]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     void loadCountries();
   }, [loadCountries]);
 
   const onLoadMore = () => {
     const newOffset = offset + limit;
-
     setOffset(newOffset);
     void loadCountries();
   };
@@ -66,5 +69,6 @@ export const useCountries = ({ fetchDelay = 0 }) => {
     hasMore,
     isLoading,
     onLoadMore,
+    error,
   };
-}
+};

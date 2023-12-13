@@ -8,27 +8,8 @@ import {useState} from 'react'
 import { useCountries } from "../hooks/useCountries";
 
 const NationalitySelect = ({ control, formError: error }: NationalitySelectProps) => {
-  // const fetchCountries = async () => {
-  //   const res = await fetch("https://flagcdn.com/en/codes.json");
-  //   if (!res.ok) throw new Error("Countries can't fetch, please try again");
-  //   const data = (await res.json()) as Country;
-  //   if (Object.keys(data).length === 0) throw new Error("Countries can't be fetched, please try again");
-    
-  //   //Converts the data object into array  objects with key, value pairs
-  //   const dataArray = Object.entries(data).map(([key, value]) => ({
-  //     key,
-  //     value,
-  //   }));
-
-  //   return dataArray;
-  // };
-
-  // const { isLoading, data, error } = useQuery({
-  //   queryKey: ["countries"],
-  //   queryFn: fetchCountries,
-  // });
   const [isOpen, setIsOpen] = useState(false);
-  const { items, hasMore, isLoading, onLoadMore } = useCountries({
+  const { items, hasMore, isLoading, onLoadMore, error: countryError } = useCountries({
     fetchDelay: 500,
   });
 
@@ -51,8 +32,8 @@ const NationalitySelect = ({ control, formError: error }: NationalitySelectProps
           selectedKeys={field.value || []}
           onSelectionChange={field.onChange}
           items={items}
-          isInvalid={!!error.nationality}
-          errorMessage={error.nationality?.message}
+          isInvalid={!!error.nationality || !!countryError}
+          errorMessage={error.nationality?.message ?? countryError}
           scrollRef={scrollerRef}
           selectionMode="single"
           onOpenChange={setIsOpen}

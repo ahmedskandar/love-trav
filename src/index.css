@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Remove default eye in password input */
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
@@ -11,5 +12,5 @@ input[type="password"]::-ms-clear {
 .filepond--panel-root {
   background: linear-gradient(to right, #ffdab9, #ffd999);
   border-radius: 24rem;
-  border: 1px solid lightgray
+  border: 1px solid lightgray;
 }
