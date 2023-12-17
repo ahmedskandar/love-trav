@@ -91,34 +91,36 @@ export type ImageUploadProps = {
 
 export type ChatFormProps = {
   setUserMessages: Dispatch<React.SetStateAction<string[]>>;
-  isLoading: boolean
-  error: string
+  isLoading: boolean;
+  error: string;
 };
 
 export type ChatHeaderProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<React.SetStateAction<boolean>>;
+  botAvatar: string;
 };
 
 export type ChatBodyProps = {
   userMessages: string[];
   setError: Dispatch<React.SetStateAction<string>>;
+  setBotAvatar: Dispatch<React.SetStateAction<string>>;
   setIsLoading: Dispatch<React.SetStateAction<boolean>>;
-  isOpen: boolean
+  isOpen: boolean;
 };
 
 export type ChatClient = {
   success: boolean;
   data: {
-    id: number,
-    slug: string,
-    is_banned: boolean,
-    image: string,
-    created_at: Date,
-    updated_at: Date,
+    id: number;
+    slug: string;
+    is_banned: boolean;
+    image: string;
+    created_at: Date;
+    updated_at: Date;
   };
-  message: string
-}
+  message: string;
+};
 
 export type User = {
   id: string;
@@ -162,16 +164,10 @@ type Identity = {
   email: string;
 };
 
-export type Conversation = {
+export type ConversationResponse = {
   success: boolean;
   data: {
-    conversation: {
-      id: number;
-      slug: string;
-      input: string;
-      output: string;
-      topic: string;
-    };
+    conversation: Conversation;
     bot: {
       id: number;
       slug: string;
@@ -192,4 +188,19 @@ export type Conversation = {
     };
   };
   message: string;
+};
+
+type Conversation = {
+  id: number;
+  slug: string;
+  input: string;
+  output: string;
+  topic: string;
+};
+
+export type ConversationInput = {
+  input: string;
+  output: string;
+  bot_id: number;
+  client_slug: string;
 };

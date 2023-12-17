@@ -1,16 +1,20 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import { ChatBodyProps, Conversation, User } from "../../lib/types";
+import { ChatBodyProps, ConversationResponse, User } from "../../lib/types";
 import { useUser } from "../../hooks/useUser";
 import supabase from "../../services/supabase";
 import { rapidApiKey } from "../../data/constants";
+import { useAddConversation } from "./useAddConversation";
 
 const ChatBody = ({
   setError,
   setIsLoading,
   userMessages,
   isOpen,
+  setBotAvatar
 }: ChatBodyProps) => {
-  const { user: {user_metadata} } = useUser() as {user: User};
+  const {
+    user: { user_metadata },
+  } = useUser() as { user: User };
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<
     {
@@ -21,6 +25,9 @@ const ChatBody = ({
       bot: { image: string };
     }[]
   >([]);
+
+  const { addConversation } = useAddConversation();
+
   const url = "https://lemurbot.p.rapidapi.com/chat";
 
   useEffect(() => {
@@ -48,7 +55,7 @@ const ChatBody = ({
             "Failed to fetch: " + response.status + response.statusText,
           );
         }
-        const data = (await response.json()) as Conversation;
+        const data = (await response.json()) as ConversationResponse;
 
         if (!data) throw new Error("data empty");
 
@@ -58,13 +65,7 @@ const ChatBody = ({
           bot_id: data.data.bot.id,
           client_slug: data.data.client.slug,
         };
-
-        const { error } = await supabase.from("conversations").insert([conv]);
-
-        if (error)
-          throw new Error(
-            "Error inserting conversation data: " + error.message,
-          );
+        addConversation(conv);
       } catch (error) {
         if (error instanceof Error) setError("Error " + error.message);
       } finally {
@@ -73,7 +74,7 @@ const ChatBody = ({
     };
 
     void fetchData();
-  }, [userMessages, setError, setIsLoading, user_metadata.clientChatSlug]);
+  }, [userMessages, setError, setIsLoading, user_metadata.clientChatSlug, addConversation]);
 
   useEffect(() => {
     // Scroll to the bottom when new messages arrive
@@ -100,11 +101,12 @@ const ChatBody = ({
       };
 
       if (error) setError("Error loading conversations: " + error.message);
+      //Use the image of the bot you chat with last
+      setBotAvatar(conversations[conversations.length-1].bot.image)
       setMessages(conversations);
-      //   console.log(conversations);
     };
     void fetchConversation();
-  }, [setError, user_metadata.clientChatSlug]);
+  }, [setError, user_metadata.clientChatSlug, setBotAvatar]);
 
   return (
     <div

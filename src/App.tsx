@@ -12,7 +12,7 @@ import Signup from "./pages/Signup";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NextUIProvider } from "@nextui-org/react";
-import Chat from "./ui/chat/Chat";
+import Chat from "./features/chat/Chat";
 
 function App() {
   const navigate = useNavigate();

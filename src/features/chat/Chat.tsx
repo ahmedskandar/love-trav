@@ -9,10 +9,13 @@ const Chat = () => {
   const [userMessages, setUserMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [botAvatar, setBotAvatar] = useState("")
   return (
     <div className={`${isOpen ? " w-96" : "w-60"} transition-all duration-300`}>
-      <ChatHeader isOpen={isOpen} setIsOpen={setIsOpen} />
+      <ChatHeader botAvatar={botAvatar} isOpen={isOpen} setIsOpen={setIsOpen} />
       <ChatBody
+      setBotAvatar={setBotAvatar}
         userMessages={userMessages}
         setError={setError}
         setIsLoading={setIsLoading}

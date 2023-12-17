@@ -1,5 +1,11 @@
 import { rapidApiKey } from "../data/constants";
-import { ChatClient, TLoginSchema, TResetSchema, User } from "../lib/types";
+import {
+  ChatClient,
+  ConversationInput,
+  TLoginSchema,
+  TResetSchema,
+  User,
+} from "../lib/types";
 import supabase, { supabaseUrl } from "./supabase";
 
 export const login = async ({ email, password }: TLoginSchema) => {
@@ -59,7 +65,10 @@ export const getCurrentUser = async () => {
   const { data: session } = await supabase.auth.getSession();
   if (!session.session) return null; //If no current user
 
-  const { data, error } = await supabase.auth.getUser() as unknown as {data: {user: User}, error: Error};
+  const { data, error } = (await supabase.auth.getUser()) as unknown as {
+    data: { user: User };
+    error: Error;
+  };
 
   if (error) throw new Error(error.message);
 
@@ -126,5 +135,10 @@ export const update = async ({ password }: { password: string }) => {
     password: password,
   });
 
+  if (error) throw new Error(error.message);
+};
+
+export const addConversation = async (conv: ConversationInput) => {
+  const { error } = await supabase.from("conversations").insert([conv]);
   if (error) throw new Error(error.message);
 };
