@@ -16,7 +16,6 @@ const LoginForm = () => {
   const [isEyeVisible, setIsEyeVisible] = useState(false);
   const toggleEyeVisibility = () => setIsEyeVisible(!isEyeVisible);
   const { login, isPending } = useLogin();
-
   const {
     register,
     handleSubmit,

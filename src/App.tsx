@@ -12,6 +12,7 @@ import Signup from "./pages/Signup";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NextUIProvider } from "@nextui-org/react";
+import Chat from "./ui/chat/Chat";
 
 function App() {
   const navigate = useNavigate();
@@ -39,7 +40,9 @@ function App() {
             path="app"
             element={
               <NotLoggedInProtection>
-                <p>Chattt</p>
+                <div className="flex h-screen items-center justify-center">
+                  <Chat />
+                </div>
               </NotLoggedInProtection>
             }
           >

@@ -37,7 +37,6 @@ const SignupForm = () => {
   const { signup, isPending } = useSignup();
 
   const onSubmit = (data: TSignUpSchema) => {
-    console.log("something haped")
     const nationality = Array.from(data.nationality)[0]; //Nationality returns a set, converts the set to array and takes the first element
     const userData = {
       ...data,
