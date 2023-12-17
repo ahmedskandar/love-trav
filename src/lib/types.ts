@@ -91,8 +91,6 @@ export type ImageUploadProps = {
 
 export type ChatFormProps = {
   setUserMessage: Dispatch<React.SetStateAction<string>>;
-  isLoading: boolean;
-  error: string;
 };
 
 export type ChatHeaderProps = {
@@ -102,10 +100,7 @@ export type ChatHeaderProps = {
 };
 
 export type ChatBodyProps = {
-  userMessage: string;
-  setError: Dispatch<React.SetStateAction<string>>;
   setBotAvatar: Dispatch<React.SetStateAction<string>>;
-  setIsLoading: Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
 };
 

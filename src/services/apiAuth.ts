@@ -36,10 +36,9 @@ export const login = async ({ email, password }: TLoginSchema) => {
         );
       }
       const data = (await response.json()) as ChatClient;
-      // console.log(data);
       return data;
     } catch (e) {
-      console.log(e);
+      if (e instanceof Error) throw new Error(e.message);
     }
   };
 

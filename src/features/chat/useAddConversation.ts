@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 export const useAddConversation = () => {
   const queryClient = useQueryClient();
-  const { mutate: addConversation } = useMutation({
+  const { mutate: addConversation, error, isPending } = useMutation({
     mutationFn: addConversationAPI,
     onSuccess: () => {
       // Invalidate or refetch a query after a successful mutation
@@ -14,5 +14,5 @@ export const useAddConversation = () => {
       toast.error("Error inserting conversation texts: " + error.message),
   });
 
-  return { addConversation };
+  return { addConversation, error, isPending };
 };
