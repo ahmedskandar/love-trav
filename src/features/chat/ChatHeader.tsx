@@ -6,7 +6,14 @@ const ChatHeader = ({ isOpen, setIsOpen, botAvatar }: ChatHeaderProps) => {
   return (
     <header className="flex items-center justify-between rounded-t bg-gradient-to-b from-yellow-600 to-yellow-500 p-1 pr-3">
       <div className="flex items-center gap-2">
-        <img src={botAvatar} className="w-12" alt="" />
+        <img
+          src={
+            botAvatar ||
+            "/assets/icons/love-trav.png"
+          }
+          className="w-12 h-12 object-cover rounded-full"
+          alt=""
+        />
         <span className="text-white">Travel Assistant</span>
       </div>
       <FontAwesomeIcon

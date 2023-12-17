@@ -4,9 +4,9 @@ import ChatHeader from "./ChatHeader";
 import ChatBody from "./ChatBody";
 
 const Chat = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
-  const [userMessages, setUserMessages] = useState<string[]>([]);
+  const [userMessage, setUserMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -16,14 +16,14 @@ const Chat = () => {
       <ChatHeader botAvatar={botAvatar} isOpen={isOpen} setIsOpen={setIsOpen} />
       <ChatBody
       setBotAvatar={setBotAvatar}
-        userMessages={userMessages}
+        userMessage={userMessage}
         setError={setError}
         setIsLoading={setIsLoading}
         isOpen={isOpen}
       />
       {isOpen && (
         <ChatForm
-          setUserMessages={setUserMessages}
+          setUserMessage={setUserMessage}
           isLoading={isLoading}
           error={error}
         />

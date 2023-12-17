@@ -90,7 +90,7 @@ export type ImageUploadProps = {
 };
 
 export type ChatFormProps = {
-  setUserMessages: Dispatch<React.SetStateAction<string[]>>;
+  setUserMessage: Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
   error: string;
 };
@@ -102,7 +102,7 @@ export type ChatHeaderProps = {
 };
 
 export type ChatBodyProps = {
-  userMessages: string[];
+  userMessage: string;
   setError: Dispatch<React.SetStateAction<string>>;
   setBotAvatar: Dispatch<React.SetStateAction<string>>;
   setIsLoading: Dispatch<React.SetStateAction<boolean>>;
@@ -203,4 +203,20 @@ export type ConversationInput = {
   output: string;
   bot_id: number;
   client_slug: string;
+};
+
+export type ConversationFetch = {
+  data: {
+    id: number;
+    input: string;
+    output: string;
+    clients: { image: string };
+    bot: { image: string, name: string };
+  }[];
+  error: Error;
+};
+
+export type ConversationParams = {
+  clientChatSlug: string;
+  setBotAvatar: React.Dispatch<React.SetStateAction<string>>;
 };

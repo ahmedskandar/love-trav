@@ -4,17 +4,17 @@ import { Input, Spinner } from "@nextui-org/react";
 import { ChatFormProps } from "../../lib/types";
 import { useState } from "react";
 
-const ChatForm = ({ setUserMessages, isLoading, error }: ChatFormProps) => {
+const ChatForm = ({ setUserMessage, isLoading, error }: ChatFormProps) => {
   const [input, setInput] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setUserMessages((prevState) => [...prevState, input]);
+    setUserMessage(input);
     setInput("");
   };
 
   const handleClick = () => {
-    setUserMessages((prevState) => [...prevState, input]);
+    setUserMessage(input);
     setInput("");
   };
 

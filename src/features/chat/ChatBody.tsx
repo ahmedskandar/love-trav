@@ -1,41 +1,37 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { ChatBodyProps, ConversationResponse, User } from "../../lib/types";
 import { useUser } from "../../hooks/useUser";
-import supabase from "../../services/supabase";
 import { rapidApiKey } from "../../data/constants";
 import { useAddConversation } from "./useAddConversation";
+import { useFetchConversation } from "./useFetchConversation";
 
 const ChatBody = ({
   setError,
   setIsLoading,
-  userMessages,
+  userMessage,
   isOpen,
-  setBotAvatar
+  setBotAvatar,
 }: ChatBodyProps) => {
   const {
     user: { user_metadata },
   } = useUser() as { user: User };
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
-  const [messages, setMessages] = useState<
-    {
-      id: number;
-      input: string;
-      output: string;
-      clients: { image: string };
-      bot: { image: string };
-    }[]
-  >([]);
 
   const { addConversation } = useAddConversation();
+  const { conversations, isPending, error } = useFetchConversation({
+    clientChatSlug: user_metadata.clientChatSlug,
+    setBotAvatar,
+  });
 
   const url = "https://lemurbot.p.rapidapi.com/chat";
 
   useEffect(() => {
-    if (userMessages.length === 0) return;
+    if (!userMessage) return;
     setIsLoading(true);
     setError("");
     const fetchData = async () => {
       try {
+        //Fetch response from bot
         const response = await fetch(url, {
           method: "POST",
           headers: {
@@ -46,7 +42,7 @@ const ChatBody = ({
           body: JSON.stringify({
             bot: "dilly",
             client: user_metadata.clientChatSlug,
-            message: userMessages[userMessages.length - 1],
+            message: userMessage,
           }),
         });
 
@@ -65,6 +61,7 @@ const ChatBody = ({
           bot_id: data.data.bot.id,
           client_slug: data.data.client.slug,
         };
+        //Add response to database. Error thrown here is not caught in the catch block.
         addConversation(conv);
       } catch (error) {
         if (error instanceof Error) setError("Error " + error.message);
@@ -74,7 +71,13 @@ const ChatBody = ({
     };
 
     void fetchData();
-  }, [userMessages, setError, setIsLoading, user_metadata.clientChatSlug, addConversation]);
+  }, [
+    userMessage,
+    setError,
+    setIsLoading,
+    user_metadata.clientChatSlug,
+    addConversation,
+  ]);
 
   useEffect(() => {
     // Scroll to the bottom when new messages arrive
@@ -82,55 +85,41 @@ const ChatBody = ({
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-  }, [messages]);
-
-  useEffect(() => {
-    const fetchConversation = async () => {
-      const { data: conversations, error } = (await supabase
-        .from("conversations")
-        .select("id,input,output,clients(image),bot(image)")
-        .eq("client_slug", user_metadata.clientChatSlug)) as unknown as {
-        data: {
-          id: number;
-          input: string;
-          output: string;
-          clients: { image: string };
-          bot: { image: string };
-        }[];
-        error: Error;
-      };
-
-      if (error) setError("Error loading conversations: " + error.message);
-      //Use the image of the bot you chat with last
-      setBotAvatar(conversations[conversations.length-1].bot.image)
-      setMessages(conversations);
-    };
-    void fetchConversation();
-  }, [setError, user_metadata.clientChatSlug, setBotAvatar]);
-
+  }, [conversations]);
+  
   return (
     <div
       ref={chatContainerRef}
       className={`${
         isOpen ? `max-h-52 overflow-auto p-2` : "max-h-0 overflow-hidden"
-      } scrollbar h-52 rounded-b bg-gray-100 transition-all duration-300`}
+      } scrollbar h-52 rounded-b bg-gray-100 transition-all duration-300 ${
+        error && "bg-red-500"
+      }`}
     >
-      {messages.map((message) => (
-        <Fragment key={message.id}>
-          <div className="flex flex-row-reverse items-center gap-2 p-1 pl-6">
-            <img
-              className="h-8 w-8 rounded-full object-cover"
-              src={user_metadata.avatar || message.clients.image}
-              alt=""
-            />
-            <p>{message.input}</p>
-          </div>
-          <div className="flex items-center gap-2 p-1 pr-6">
-            <img className="h-8 w-8" src={message.bot.image} alt="" />
-            <p>{message.output}</p>
-          </div>
-        </Fragment>
-      ))}
+      {isPending ? (
+        <p className="mt-2 text-center">Loading...</p>
+      ) : error ? (
+        <p>Error: {error.message}</p>
+      ) : conversations && conversations?.length > 0 ? (
+        conversations.map((conversation) => (
+          <Fragment key={conversation.id}>
+            <div className="flex flex-row-reverse items-center gap-2 p-1 pl-6">
+              <img
+                className="h-8 w-8 rounded-full object-cover"
+                src={user_metadata.avatar || conversation.clients.image}
+                alt=""
+              />
+              <p>{conversation.input}</p>
+            </div>
+            <div className="flex items-center gap-2 p-1 pr-6">
+              <img className="h-8 w-8" src={conversation.bot.image} alt="" />
+              <p>{conversation.output}</p>
+            </div>
+          </Fragment>
+        ))
+      ) : (
+        <p>Send a message to start a new conversation</p>
+      )}
     </div>
   );
 };
