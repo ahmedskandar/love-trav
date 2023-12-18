@@ -1,14 +1,17 @@
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Input, Spinner } from "@nextui-org/react";
-import { ConversationResponse, User } from "../../lib/types";
 import { useState } from "react";
+
 import { rapidApiKey } from "../../data/constants";
 import { useUser } from "../../hooks/useUser";
 import { useAddConversation } from "./useAddConversation";
+import { ConversationResponse, User } from "../../lib/types";
+
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Input, Spinner } from "@nextui-org/react";
 
 const ChatForm = () => {
   const [input, setInput] = useState("");
+  //Refactor this to the constants file
   const url = "https://lemurbot.p.rapidapi.com/chat";
   const {
     user: { user_metadata: {clientChatSlug} },
@@ -17,6 +20,7 @@ const ChatForm = () => {
   const [botResponseError, setBotResponseError] = useState("")
   const { addConversation, error: addConversationError, isPending } = useAddConversation();
 
+  //Refactor this to it's own custom hook. Try using react query
   const fetchData = async () => {
     try {
       setIsLoading(true)
@@ -67,6 +71,7 @@ const ChatForm = () => {
     setInput("");
   };
 
+  //Remove this after adding submit arrow
   const handleClick = () => {
     void fetchData();
     setInput("");
@@ -74,6 +79,7 @@ const ChatForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* Change to text area and have a submit arrow button */}
       <Input
       isRequired
         value={input}

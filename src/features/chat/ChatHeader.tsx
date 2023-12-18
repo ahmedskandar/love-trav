@@ -1,6 +1,7 @@
+import { ChatHeaderProps } from "../../lib/types";
+
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ChatHeaderProps } from "../../lib/types";
 
 const ChatHeader = ({ isOpen, setIsOpen, botAvatar }: ChatHeaderProps) => {
   return (

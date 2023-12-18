@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef } from "react";
+
 import { ChatBodyProps, User } from "../../lib/types";
 import { useFetchConversation } from "./useFetchConversation";
 import { useUser } from "../../hooks/useUser";
@@ -11,12 +12,13 @@ const ChatBody = ({ isOpen, setBotAvatar }: ChatBodyProps) => {
       user_metadata: { avatar, clientChatSlug },
     },
   } = useUser() as { user: User };
-
+//Remove setBotAvatar
   const { conversations, isPending, error } = useFetchConversation({
     clientChatSlug: clientChatSlug,
     setBotAvatar,
   });
 
+  //Refactor this
   useEffect(() => {
     // Scroll to the bottom when new messages arrive
     if (chatContainerRef.current) {
@@ -34,6 +36,7 @@ const ChatBody = ({ isOpen, setBotAvatar }: ChatBodyProps) => {
         error && "bg-red-500"
       }`}
     >
+      {/* Add skeleton on top of the image and displayed items instead of a loading text */}
       {isPending ? (
         <p className="mt-2 text-center">Loading...</p>
       ) : error ? (
@@ -41,7 +44,7 @@ const ChatBody = ({ isOpen, setBotAvatar }: ChatBodyProps) => {
       ) : conversations && conversations?.length > 0 ? (
         conversations.map((conversation) => (
           <Fragment key={conversation.id}>
-            <div className="flex flex-row-reverse items-center gap-2 p-1 pl-6">
+            <div className="flex bg-yellow-50 rounded-md flex-row-reverse items-center gap-2 p-1 pl-11">
               <img
                 className="h-8 w-8 rounded-full object-cover"
                 src={avatar || conversation.clients.image}
@@ -49,14 +52,14 @@ const ChatBody = ({ isOpen, setBotAvatar }: ChatBodyProps) => {
               />
               <p>{conversation.input}</p>
             </div>
-            <div className="flex items-center gap-2 p-1 pr-6">
+            <div className="flex items-center gap-2 p-1 pr-11">
               <img className="h-8 w-8" src={conversation.bot.image} alt="" />
               <p>{conversation.output}</p>
             </div>
           </Fragment>
         ))
       ) : (
-        <p>Send a message to start a new conversation</p>
+        <p>Send a message to start a new conversation 💬</p>
       )}
     </div>
   );
