@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { rapidApiKey } from "../../data/constants";
+import { CHAT_URL, rapidApiKey } from "../../data/constants";
 import { useUser } from "../../hooks/useUser";
 import { useAddConversation } from "./useAddConversation";
 import { ConversationResponse, User } from "../../lib/types";
@@ -11,8 +11,6 @@ import { Input, Spinner } from "@nextui-org/react";
 
 const ChatForm = () => {
   const [input, setInput] = useState("");
-  //Refactor this to the constants file
-  const url = "https://lemurbot.p.rapidapi.com/chat";
   const {
     user: { user_metadata: {clientChatSlug} },
   } = useUser() as { user: User };
@@ -26,7 +24,7 @@ const ChatForm = () => {
       setIsLoading(true)
       setBotResponseError("")
       //Send message to bot
-      const response = await fetch(url, {
+      const response = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

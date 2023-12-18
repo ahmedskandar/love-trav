@@ -3,7 +3,7 @@ import { useState } from "react";
 import ChatForm from "./ChatForm";
 import ChatHeader from "./ChatHeader";
 import ChatBody from "./ChatBody";
-// USE ZOD FOR ANY NETWORK REQUEST DATA RECEIVED
+
 const Chat = () => {
   const [isOpen, setIsOpen] = useState(true);
   return (

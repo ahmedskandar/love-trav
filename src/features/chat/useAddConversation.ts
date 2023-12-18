@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addConversation as addConversationAPI } from "../../services/apiAuth";
+import { addConversation as addConversationAPI } from "../../services/apiChat";
 import { toast } from "sonner";
 
 export const useAddConversation = () => {

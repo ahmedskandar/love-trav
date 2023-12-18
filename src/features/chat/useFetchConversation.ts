@@ -1,5 +1,5 @@
 import { ConversationParams } from "../../lib/types";
-import { fetchConversation as fetchConversationAPI } from "../../services/apiAuth";
+import { fetchConversation as fetchConversationAPI } from "../../services/apiChat";
 
 import { useQuery } from "@tanstack/react-query";
 
