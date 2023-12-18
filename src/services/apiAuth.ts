@@ -146,7 +146,6 @@ export const addConversation = async (conv: ConversationInput) => {
 
 export const fetchConversation = async ({
   clientChatSlug,
-  setBotAvatar,
 }: ConversationParams) => {
   const { data: conversations, error } = (await supabase
     .from("conversations")
@@ -154,7 +153,5 @@ export const fetchConversation = async ({
     .eq("client_slug", clientChatSlug)) as unknown as ConversationFetch;
   if (error) throw new Error(error.message);
 
-  if (conversations && conversations.length > 0)
-    setBotAvatar(conversations[conversations.length - 1].bot.image);
   return conversations;
 };

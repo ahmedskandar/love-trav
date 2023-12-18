@@ -96,11 +96,9 @@ export type ChatFormProps = {
 export type ChatHeaderProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<React.SetStateAction<boolean>>;
-  botAvatar: string;
 };
 
 export type ChatBodyProps = {
-  setBotAvatar: Dispatch<React.SetStateAction<string>>;
   isOpen: boolean;
 };
 
@@ -162,7 +160,13 @@ type Identity = {
 export type ConversationResponse = {
   success: boolean;
   data: {
-    conversation: Conversation;
+    conversation: {
+      id: number;
+      slug: string;
+      input: string;
+      output: string;
+      topic: string;
+    };
     bot: {
       id: number;
       slug: string;
@@ -185,14 +189,6 @@ export type ConversationResponse = {
   message: string;
 };
 
-type Conversation = {
-  id: number;
-  slug: string;
-  input: string;
-  output: string;
-  topic: string;
-};
-
 export type ConversationInput = {
   input: string;
   output: string;
@@ -201,17 +197,18 @@ export type ConversationInput = {
 };
 
 export type ConversationFetch = {
-  data: {
-    id: number;
-    input: string;
-    output: string;
-    clients: { image: string };
-    bot: { image: string, name: string };
-  }[];
+  data: Conversation;
   error: Error;
 };
 
+export type Conversation = {
+  id: number;
+  input: string;
+  output: string;
+  clients: { image: string };
+  bot: { image: string; name: string };
+}[];
+
 export type ConversationParams = {
   clientChatSlug: string;
-  setBotAvatar: React.Dispatch<React.SetStateAction<string>>;
 };

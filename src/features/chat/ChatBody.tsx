@@ -3,8 +3,9 @@ import { Fragment, useEffect, useRef } from "react";
 import { ChatBodyProps, User } from "../../lib/types";
 import { useFetchConversation } from "./useFetchConversation";
 import { useUser } from "../../hooks/useUser";
+import { Skeleton } from "@nextui-org/react";
 
-const ChatBody = ({ isOpen, setBotAvatar }: ChatBodyProps) => {
+const ChatBody = ({ isOpen }: ChatBodyProps) => {
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   const {
@@ -15,7 +16,6 @@ const ChatBody = ({ isOpen, setBotAvatar }: ChatBodyProps) => {
 //Remove setBotAvatar
   const { conversations, isPending, error } = useFetchConversation({
     clientChatSlug: clientChatSlug,
-    setBotAvatar,
   });
 
   //Refactor this
@@ -28,6 +28,7 @@ const ChatBody = ({ isOpen, setBotAvatar }: ChatBodyProps) => {
   }, [conversations]);
 
   return (
+    <Skeleton isLoaded={!isPending}>
     <div
       ref={chatContainerRef}
       className={`${
@@ -37,9 +38,7 @@ const ChatBody = ({ isOpen, setBotAvatar }: ChatBodyProps) => {
       }`}
     >
       {/* Add skeleton on top of the image and displayed items instead of a loading text */}
-      {isPending ? (
-        <p className="mt-2 text-center">Loading...</p>
-      ) : error ? (
+      {error ? (
         <p>Error: {error.message}</p>
       ) : conversations && conversations?.length > 0 ? (
         conversations.map((conversation) => (
@@ -58,10 +57,11 @@ const ChatBody = ({ isOpen, setBotAvatar }: ChatBodyProps) => {
             </div>
           </Fragment>
         ))
-      ) : (
-        <p>Send a message to start a new conversation 💬</p>
-      )}
+        ) : (
+          <p>Send a message to start a new conversation 💬</p>
+          )}
     </div>
+          </ Skeleton>
   );
 };
 
