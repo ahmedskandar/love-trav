@@ -1,10 +1,5 @@
-import { rapidApiKey } from "../data/constants";
-import {
-  ChatClient,
-  TLoginSchema,
-  TResetSchema,
-  User,
-} from "../lib/types";
+import { TLoginSchema, TResetSchema } from "../lib/types";
+import { fetchClient } from "../lib/utils";
 import supabase, { supabaseUrl } from "./supabase";
 
 export const login = async ({ email, password }: TLoginSchema) => {
@@ -14,34 +9,10 @@ export const login = async ({ email, password }: TLoginSchema) => {
   });
   if (error) throw new Error(error.message);
 
-  //Creates a new client for the chat bot
-  const fetchClient = async () => {
-    try {
-      const response = await fetch("https://lemurbot.p.rapidapi.com/clients", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-RapidAPI-Key": rapidApiKey,
-          "X-RapidAPI-Host": "lemurbot.p.rapidapi.com",
-        },
-        body: JSON.stringify({}),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          "Failed to fetch: " + response.status + response.statusText,
-        );
-      }
-      const data = (await response.json()) as ChatClient;
-      return data;
-    } catch (e) {
-      if (e instanceof Error) throw new Error(e.message);
-    }
-  };
-
   //If user is new, create a new chat client for him
   if (!data?.user?.user_metadata?.clientChatSlug) {
-    const clientData = (await fetchClient())!;
+    const clientData = (await fetchClient())!; //If fetchClient throws an error, code execution will stop and the error will be propagated to react query
+
     //Add the client details record in its table
     const { error } = await supabase.from("clients").insert([clientData.data]);
 
@@ -51,7 +22,7 @@ export const login = async ({ email, password }: TLoginSchema) => {
     const { error: updateError } = await supabase.auth.updateUser({
       data: { clientChatSlug: clientData.data.slug },
     });
-    console.log("created new client");
+
     if (updateError)
       throw new Error("Error creating a chat client: " + updateError.message);
   }
@@ -63,10 +34,7 @@ export const getCurrentUser = async () => {
   const { data: session } = await supabase.auth.getSession();
   if (!session.session) return null; //If no current user
 
-  const { data, error } = (await supabase.auth.getUser()) as unknown as {
-    data: { user: User };
-    error: Error;
-  };
+  const { data, error } = await supabase.auth.getUser();
 
   if (error) throw new Error(error.message);
 
@@ -135,4 +103,3 @@ export const update = async ({ password }: { password: string }) => {
 
   if (error) throw new Error(error.message);
 };
-

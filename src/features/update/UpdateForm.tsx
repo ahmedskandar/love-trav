@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useUpdate } from "./useUpdate";
-import { TUpdateSchema, updateSchema } from "../../lib/types";
+import { TUpdateSchema } from "../../lib/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
+import { updateSchema } from "../../lib/schemas";
 
 const UpdateForm = () => {
   const { update, isPending } = useUpdate();

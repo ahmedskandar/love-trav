@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import FormPrompt from "../../ui/FormPrompt";
 import { useLogin } from "./useLogin";
-import { TLoginSchema, loginSchema } from "../../lib/types";
+import { TLoginSchema } from "../../lib/types";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Checkbox, Input, Link } from "@nextui-org/react";
@@ -11,6 +11,7 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../../lib/schemas";
 
 const LoginForm = () => {
   const [isEyeVisible, setIsEyeVisible] = useState(false);

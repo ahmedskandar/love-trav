@@ -7,22 +7,28 @@ import { ConversationResponse, User } from "../../lib/types";
 
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Input, Spinner } from "@nextui-org/react";
+import { Button, Textarea } from "@nextui-org/react";
 
 const ChatForm = () => {
   const [input, setInput] = useState("");
   const {
-    user: { user_metadata: {clientChatSlug} },
+    user: {
+      user_metadata: { clientChatSlug },
+    },
   } = useUser() as { user: User };
-  const [isLoading, setIsLoading] = useState(false)
-  const [botResponseError, setBotResponseError] = useState("")
-  const { addConversation, error: addConversationError, isPending } = useAddConversation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [botResponseError, setBotResponseError] = useState("");
+  const {
+    addConversation,
+    error: addConversationError,
+    isPending,
+  } = useAddConversation();
 
   //Refactor this to it's own custom hook. Try using react query
   const fetchData = async () => {
     try {
-      setIsLoading(true)
-      setBotResponseError("")
+      setIsLoading(true);
+      setBotResponseError("");
       //Send message to bot
       const response = await fetch(CHAT_URL, {
         method: "POST",
@@ -43,7 +49,8 @@ const ChatForm = () => {
           "Failed to fetch: " + response.status + response.statusText,
         );
       }
-      const conversationResponse = (await response.json()) as ConversationResponse;
+      const conversationResponse =
+        (await response.json()) as ConversationResponse;
 
       if (!conversationResponse) throw new Error("Empty response");
 
@@ -53,7 +60,7 @@ const ChatForm = () => {
         bot_id: conversationResponse.data.bot.id,
         client_slug: conversationResponse.data.client.slug,
       };
-      //Add response to database. 
+      //Add response to database. Has its own loading, error and pending state
       void addConversation(conv);
     } catch (error) {
       //Catches only bot errors
@@ -62,24 +69,18 @@ const ChatForm = () => {
       setIsLoading(false);
     }
   };
-  
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     void fetchData();
     setInput("");
   };
 
-  //Remove this after adding submit arrow
-  const handleClick = () => {
-    void fetchData();
-    setInput("");
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
-      {/* Change to text area and have a submit arrow button */}
-      <Input
-      isRequired
+    <form onSubmit={handleSubmit} className="flex ">
+      <Textarea
+        maxRows={2}
+        isRequired
         value={input}
         isDisabled={isLoading || isPending}
         radius="none"
@@ -89,20 +90,20 @@ const ChatForm = () => {
         placeholder="Enter message..."
         variant="flat"
         color="warning"
-        endContent={
-          isLoading ? (
-            <Spinner color="warning" />
-          ) : (
-
-            <FontAwesomeIcon
-            className=""
-              role="button"
-              onClick={handleClick}
-              icon={faArrowRight}
-              />
-          )
-        }
       />
+      <div className="">
+        <Button
+          isLoading={isLoading || isPending}
+          type="submit"
+          className="h-full"
+          radius="none"
+          isIconOnly
+          color="warning"
+          aria-label="Like"
+        >
+          <FontAwesomeIcon icon={faArrowRight} />
+        </Button>
+      </div>
     </form>
   );
 };

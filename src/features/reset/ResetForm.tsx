@@ -1,10 +1,11 @@
 import { Button, Input } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
-import { TResetSchema, resetSchema } from "../../lib/types";
+import { TResetSchema } from "../../lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useReset } from "./useReset";
+import { resetSchema } from "../../lib/schemas";
 
 const ResetForm = () => {
   const { reset: resetFunction, isPending } = useReset();

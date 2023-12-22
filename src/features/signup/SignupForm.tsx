@@ -3,7 +3,7 @@ import { useState } from "react";
 import ImageUpload from "../../ui/ImageUpload";
 import NationalitySelect from "../../ui/NationalitySelect";
 import FormPrompt from "../../ui/FormPrompt";
-import { TSignUpSchema, signUpSchema } from "../../lib/types";
+import { TSignUpSchema } from "../../lib/types";
 import { useSignup } from "./useSignup";
 
 import { FilePondFile } from "filepond";
@@ -14,6 +14,7 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpSchema } from "../../lib/schemas";
 
 const SignupForm = () => {
   const [isPassEyeVisible, setIsPassEyeVisible] = useState(false);
