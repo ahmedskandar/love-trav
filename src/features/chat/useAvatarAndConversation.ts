@@ -1,5 +1,5 @@
+import { User } from "@supabase/supabase-js";
 import { useUser } from "../../hooks/useUser";
-import { User } from "../../lib/types";
 import { useFetchConversation } from "./useFetchConversation";
 
 export const useAvatarAndConversation = () => {
@@ -10,11 +10,11 @@ export const useAvatarAndConversation = () => {
   } = useUser() as { user: User };
 
   const { conversations, isPending: isFetchingConversation, error: conversationFetchError } = useFetchConversation({
-    clientChatSlug: clientChatSlug,
+    clientChatSlug: clientChatSlug as string,
   });
 
   return {
-    avatar,
+    avatar: avatar as string,
     conversations,
     isFetchingConversation,
     conversationFetchError,
