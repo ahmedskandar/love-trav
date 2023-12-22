@@ -1,4 +1,4 @@
-import { TLoginSchema, TResetSchema } from "../lib/types";
+import { TLoginSchema, TResetSchema, TSignUpSchema } from "../lib/types";
 import { fetchClient } from "../lib/utils";
 import supabase, { supabaseUrl } from "./supabase";
 
@@ -52,14 +52,8 @@ export const signup = async ({
   password,
   nationality,
   image,
-}: {
-  nationality: string;
-  image: File;
-  email: string;
-  password: string;
-  username: string;
-  confirmPassword: string;
-}) => {
+}: TSignUpSchema) => {
+  // eslint-disable-next-line
   const imageName = `${Math.random()}-${image?.name}`.replace("/", "");
   const imagePath = `${supabaseUrl}/storage/v1/object/public/avatars/${imageName}`;
 
@@ -72,6 +66,7 @@ export const signup = async ({
       data: {
         username,
         nationality,
+        // eslint-disable-next-line
         avatar: image.name !== undefined ? imagePath : "",
       },
     },
@@ -83,9 +78,11 @@ export const signup = async ({
 
   // 2. Upload image
   // Upload file using standard upload
+  // eslint-disable-next-line
   if (image.name === undefined) return;
   const { error: storageError } = await supabase.storage
     .from("avatars")
+    // eslint-disable-next-line
     .upload(imageName, image);
   if (storageError)
     throw new Error("Image could not be uploaded, please try again");

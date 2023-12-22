@@ -1,12 +1,20 @@
 import { z } from "zod";
 
+export const envSchema = z.object({
+  VITE_SUPABASE_API_KEY: z.string().min(1),
+  VITE_RAPID_API_KEY: z.string().min(1),
+});
+
+export const parsedEnv = envSchema.parse(import.meta.env)
+
 export const signUpSchema = z
   .object({
     email: z.string().email(),
     password: z.string().min(6, "Password length must be greater than 6"),
-    nationality: z.set(z.string()),
+    nationality: z.set(z.string()).or(z.string()),
     username: z.string(),
     confirmPassword: z.string(),
+    image: z.any()
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords must match",

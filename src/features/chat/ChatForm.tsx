@@ -3,11 +3,12 @@ import { useState } from "react";
 import { CHAT_URL, rapidApiKey } from "../../data/constants";
 import { useUser } from "../../hooks/useUser";
 import { useAddConversation } from "./useAddConversation";
-import { ConversationResponse, User } from "../../lib/types";
+import { ConversationResponse } from "../../lib/types";
 
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Textarea } from "@nextui-org/react";
+import { User } from "@supabase/supabase-js";
 
 const ChatForm = () => {
   const [input, setInput] = useState("");
@@ -39,7 +40,7 @@ const ChatForm = () => {
         },
         body: JSON.stringify({
           bot: "dilly",
-          client: clientChatSlug,
+          client: clientChatSlug as string,
           message: input,
         }),
       });
