@@ -19,7 +19,7 @@ const ChatForm = () => {
 
   const {
     addConversation,
-    error: addConversationError,
+    addConversationError,
     isAddingConversation,
   } = useAddConversation();
 

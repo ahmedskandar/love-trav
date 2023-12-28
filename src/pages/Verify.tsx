@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { params } from "../data/constants";
+import { params } from "../lib/constants";
 
 //After user has clicked on the verify email link sent
 const Verify = () => {

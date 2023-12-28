@@ -1,4 +1,4 @@
-import { rapidApiKey } from "../data/constants";
+import { rapidApiKey } from "./constants";
 import { ChatClientSchema } from "../lib/schemas";
 
 //Creates a new client for the chat bot
@@ -26,4 +26,3 @@ export const createClient = async () => {
     if (e instanceof Error) throw new Error(e.message);
   }
 };
-

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import UpdateForm from "../features/update/UpdateForm";
-import { params } from "../data/constants";
+import { params } from "../lib/constants";
 
 const Update = () => {
   const navigate = useNavigate();
