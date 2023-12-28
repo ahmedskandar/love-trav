@@ -9,21 +9,23 @@ import { useChatBotResponse } from "./useChatBotResponse";
 
 const ChatForm = () => {
   const [input, setInput] = useState("");
+
   const {
     data,
     error: botResponseError,
-    isPending: isLoading,
-    mutate,
+    isSendingMessage,
+    sendMessage,
   } = useChatBotResponse();
+
   const {
     addConversation,
     error: addConversationError,
-    isPending,
+    isAddingConversation,
   } = useAddConversation();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(input);
+    sendMessage(input);
     setInput("");
   };
 
@@ -37,7 +39,7 @@ const ChatForm = () => {
         maxRows={2}
         isRequired
         value={input}
-        isDisabled={isLoading || isPending}
+        isDisabled={isSendingMessage || isAddingConversation}
         radius="none"
         isInvalid={!!botResponseError || !!addConversationError}
         errorMessage={
@@ -50,7 +52,7 @@ const ChatForm = () => {
       />
       <div className="">
         <Button
-          isLoading={isLoading || isPending}
+          isLoading={isSendingMessage || isAddingConversation}
           type="submit"
           className="h-full"
           radius="none"
