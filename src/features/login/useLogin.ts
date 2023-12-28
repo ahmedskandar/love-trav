@@ -6,7 +6,7 @@ import { toast } from "sonner";
 export const useLogin = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { mutate: login, isPending } = useMutation({
+  const { mutate: login, isPending: isLoggingIn } = useMutation({
     mutationFn: loginAPI,
     onSuccess: (user) => {
       queryClient.setQueryData(["user"], user.user);
@@ -16,5 +16,5 @@ export const useLogin = () => {
     onError: (error) => toast.error(error.message),
   });
 
-  return { login, isPending };
+  return { login, isLoggingIn };
 };

@@ -1,6 +1,6 @@
 import { TLoginSchema, TResetSchema, TSignUpSchema } from "../lib/types";
-import { fetchClient } from "../lib/utils";
-import supabase, { supabaseUrl } from "./supabase";
+import { createClient } from "../lib/utils";
+import { supabaseUrl, supabase } from "./supabase";
 
 export const login = async ({ email, password }: TLoginSchema) => {
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -11,7 +11,7 @@ export const login = async ({ email, password }: TLoginSchema) => {
 
   //If user is new, create a new chat client for him
   if (!data?.user?.user_metadata?.clientChatSlug) {
-    const clientData = (await fetchClient())!; //If fetchClient throws an error, code execution will stop and the error will be propagated to react query
+    const clientData = (await createClient())!; //If createClient throws an error, code execution will stop and the error will be propagated to react query
 
     //Add the client details record in its table
     const { error } = await supabase.from("clients").insert([clientData.data]);

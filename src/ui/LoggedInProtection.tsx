@@ -7,14 +7,14 @@ import { useUser } from "../hooks/useUser";
 const LoggedInProtection = () => {
   const navigate = useNavigate();
   //Load the authenticated user
-  const { isPending, isAuthenticated } = useUser();
+  const { isGettingUser, isAuthenticated } = useUser();
 
   //If no authenticated user, redirect
   useEffect(() => {
-    if (isAuthenticated && !isPending) navigate("/app/travels", {replace: true});
-  }, [isAuthenticated, isPending, navigate]);
+    if (isAuthenticated && !isGettingUser) navigate("/app/travels", {replace: true});
+  }, [isAuthenticated, isGettingUser, navigate]);
 
-  if (isPending)
+  if (isGettingUser)
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <Spinner size="lg" color="warning" />

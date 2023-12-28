@@ -54,6 +54,39 @@ export const ChatClientSchema = z.object({
   message: z.string(),
 });
 
+export const ConversationResponseSchema = z.object({
+  success: z.boolean(),
+  data: z.object({
+    conversation: z.object({
+      id: z.number(),
+      slug: z.string(),
+      input: z.string(),
+      output: z.string(),
+      topic: z.string(),
+    }),
+    bot: z.object({
+      id: z.number(),
+      slug: z.string(),
+      name: z.string(),
+      image: z.string(),
+    }),
+    client: z.object({
+      id: z.number(),
+      slug: z.string(),
+      is_banned: z.boolean(),
+      image: z.string(),
+    }),
+    features: z.array(z.unknown()),
+    metadata: z.object({
+      version: z.string(),
+      date: z.string(),
+      duration: z.number(),
+    }),
+  }),
+  message: z.string(),
+});
+
+
 //   export const Identity = z.object({
 //     identity_id: z.string(),
 //     id: z.string(),

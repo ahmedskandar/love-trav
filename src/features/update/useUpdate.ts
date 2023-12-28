@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 export const useUpdate = () => {
   const navigate = useNavigate();
-  const { mutate: update, isPending } = useMutation({
+  const { mutate: update, isPending: isUpdating } = useMutation({
     mutationFn: updateAPI,
     onSuccess: () => {
       toast.success(
@@ -16,5 +16,5 @@ export const useUpdate = () => {
     onError: (error) => toast.error(error.message),
   });
 
-  return { update, isPending };
+  return { update, isUpdating };
 };

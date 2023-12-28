@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export const useSignup = () => {
   const navigate = useNavigate();
-  const { mutate: signup, isPending } = useMutation({
+  const { mutate: signup, isPending: isSigningUp } = useMutation({
     mutationFn: signupAPI,
     onSuccess: () => {
       toast.success(
@@ -16,5 +16,5 @@ export const useSignup = () => {
     onError: (error) => toast.error(error.message),
   });
 
-  return { signup, isPending };
+  return { signup, isSigningUp };
 };

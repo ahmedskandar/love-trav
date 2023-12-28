@@ -10,7 +10,7 @@ import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { updateSchema } from "../../lib/schemas";
 
 const UpdateForm = () => {
-  const { update, isPending } = useUpdate();
+  const { update, isUpdating } = useUpdate();
 
   const [isPassEyeVisible, setIsPassEyeVisible] = useState(false);
   const [isConfirmPassEyeVisible, setIsConfirmPassEyeVisible] = useState(false);
@@ -88,7 +88,7 @@ const UpdateForm = () => {
         type={isConfirmPassEyeVisible ? "text" : "password"}
       />
       <Button
-        isLoading={isPending}
+        isLoading={isUpdating}
         type="submit"
         size="lg"
         radius="sm"

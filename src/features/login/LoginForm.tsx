@@ -16,7 +16,7 @@ import { loginSchema } from "../../lib/schemas";
 const LoginForm = () => {
   const [isEyeVisible, setIsEyeVisible] = useState(false);
   const toggleEyeVisibility = () => setIsEyeVisible(!isEyeVisible);
-  const { login, isPending } = useLogin();
+  const { login, isLoggingIn } = useLogin();
   const {
     register,
     handleSubmit,
@@ -96,7 +96,7 @@ const LoginForm = () => {
         </Link>
       </div>
       <Button
-        isLoading={isPending}
+        isLoading={isLoggingIn}
         type="submit"
         size="lg"
         radius="sm"

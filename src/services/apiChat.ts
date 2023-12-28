@@ -1,9 +1,8 @@
 import {
-  ConversationFetch,
   ConversationInput,
   ConversationParams,
 } from "../lib/types";
-import supabase from "./supabase";
+import {supabase} from "./supabase";
 
 export const addConversation = async (conv: ConversationInput) => {
   const { error } = await supabase.from("conversations").insert([conv]);
@@ -16,8 +15,14 @@ export const fetchConversation = async ({
   const { data: conversations, error } = (await supabase
     .from("conversations")
     .select("id,input,output,clients(image),bot(image, name)")
-    .eq("client_slug", clientChatSlug)) as unknown as ConversationFetch;
+    .eq("client_slug", clientChatSlug)) 
   if (error) throw new Error(error.message);
 
-  return conversations;
+  return conversations as unknown as {
+    id: number;
+    input: string;
+    output: string;
+    clients: { image: string };
+    bot: { image: string; name: string };
+  }[];
 };

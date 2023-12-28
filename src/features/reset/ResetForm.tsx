@@ -8,7 +8,7 @@ import { useReset } from "./useReset";
 import { resetSchema } from "../../lib/schemas";
 
 const ResetForm = () => {
-  const { reset: resetFunction, isPending } = useReset();
+  const { reset: resetFunction, isResetting } = useReset();
 
   const {
     register,
@@ -43,7 +43,7 @@ const ResetForm = () => {
         endContent={<FontAwesomeIcon color="lightgray" icon={faEnvelope} />}
       />
       <Button
-        isLoading={isPending}
+        isLoading={isResetting}
         type="submit"
         size="lg"
         radius="sm"

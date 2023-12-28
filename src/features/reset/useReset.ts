@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 export const useReset = () => {
   const navigate = useNavigate();
-  const { mutate: reset, isPending } = useMutation({
+  const { mutate: reset, isPending: isResetting } = useMutation({
     mutationFn: resetAPI,
     onSuccess: () => {
       toast.success(
@@ -16,5 +16,5 @@ export const useReset = () => {
     onError: (error) => toast.error(error.message),
   });
 
-  return { reset, isPending };
+  return { reset, isResetting };
 };

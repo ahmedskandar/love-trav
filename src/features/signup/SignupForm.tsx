@@ -35,7 +35,7 @@ const SignupForm = () => {
     resolver: zodResolver(signUpSchema),
   });
 
-  const { signup, isPending } = useSignup();
+  const { signup, isSigningUp } = useSignup();
 
   const onSubmit = (data: TSignUpSchema) => {
     const nationality = Array.from(data.nationality)[0]; //Nationality returns a set, converts the set to array and takes the first element
@@ -131,7 +131,7 @@ const SignupForm = () => {
       <NationalitySelect formError={errors} control={control} />
       <ImageUpload file={file} setFile={setFile} />
       <Button
-        isLoading={isPending}
+        isLoading={isSigningUp}
         type="submit"
         radius="sm"
         className="mb-3 w-full bg-gradient-to-tr from-pink-500 to-yellow-500 font-bold text-white"

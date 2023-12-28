@@ -2,7 +2,14 @@ import { FilePondFile } from "filepond";
 import { Dispatch } from "react";
 import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { z } from "zod";
-import { loginSchema, resetSchema, signUpSchema, updateSchema } from "./schemas";
+import {
+  ConversationResponseSchema,
+  loginSchema,
+  resetSchema,
+  signUpSchema,
+  updateSchema,
+} from "./schemas";
+import { User } from "@supabase/supabase-js";
 
 export type FormPrompt = {
   to: "login" | "signup";
@@ -71,6 +78,13 @@ export type ChatClient = {
   message: string;
 };
 
+type UserMetadata = {
+  avatar: string;
+  clientChatSlug: string;
+};
+
+export type NewUser = User & { user_metadata: UserMetadata };
+
 // export type User = {
 //   id: string;
 //   aud: string;
@@ -113,38 +127,7 @@ export type ChatClient = {
 //   email: string;
 // };
 
-export type ConversationResponse = {
-  success: boolean;
-  data: {
-    conversation: {
-      id: number;
-      slug: string;
-      input: string;
-      output: string;
-      topic: string;
-    };
-    bot: {
-      id: number;
-      slug: string;
-      name: string;
-      image: string;
-    };
-    client: {
-      id: number;
-      slug: string;
-      is_banned: boolean;
-      image: string;
-    };
-    features: unknown[];
-    metadata: {
-      version: string;
-      date: string;
-      duration: number;
-    };
-  };
-  message: string;
-};
-
+export type TConversationResponseSchema = z.infer<typeof ConversationResponseSchema>
 export type ConversationInput = {
   input: string;
   output: string;
