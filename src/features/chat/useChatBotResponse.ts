@@ -11,14 +11,14 @@ export const useChatBotResponse = () => {
   const {
     mutate: sendMessage,
     isPending: isSendingMessage,
-    error,
-    data,
+    error: botResponseError,
+    data: botResponse,
   } = useMutation({
     mutationFn: (input: string) => sendMessageAPI({ input, clientChatSlug }),
-    
+
     // onError: (error) => toast.error(error.message),
   });
 
-  return { sendMessage, isSendingMessage, error, data };
+  return { sendMessage, isSendingMessage, botResponseError, botResponse };
 }
 

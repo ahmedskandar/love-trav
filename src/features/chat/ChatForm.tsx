@@ -11,8 +11,8 @@ const ChatForm = () => {
   const [input, setInput] = useState("");
 
   const {
-    data,
-    error: botResponseError,
+    botResponse,
+    botResponseError,
     isSendingMessage,
     sendMessage,
   } = useChatBotResponse();
@@ -30,8 +30,8 @@ const ChatForm = () => {
   };
 
   useEffect(() => {
-    if (data && !botResponseError) addConversation(data);
-  }, [data, botResponseError, addConversation]);
+    if (botResponse && !botResponseError) addConversation(botResponse);
+  }, [botResponse, botResponseError, addConversation]);
 
   return (
     <form onSubmit={handleSubmit} className="flex ">
