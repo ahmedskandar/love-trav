@@ -12,7 +12,7 @@ import { params } from "../data/constants";
 const Update = () => {
   const navigate = useNavigate();
 
-  const { isAuthenticated, isPending: isAuthPending } = useUser();
+  const { isAuthenticated, isGettingUser } = useUser();
 
   useEffect(() => {
     const showToast = (message: string) => {
@@ -27,12 +27,12 @@ const Update = () => {
     const error = params.error_description;
     if (error) {
       showToast(error.replace(/\+/g, " "));
-    } else if (!isAuthenticated && !isAuthPending) {
+    } else if (!isAuthenticated && !isGettingUser) {
       showToast("Access denied");
     }
-  }, [navigate, isAuthenticated, isAuthPending]);
+  }, [navigate, isAuthenticated, isGettingUser]);
 
-  if (isAuthPending)
+  if (isGettingUser)
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <Spinner size="lg" color="warning" />
