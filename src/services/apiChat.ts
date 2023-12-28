@@ -6,7 +6,7 @@ import { TConversationResponseSchema } from "../lib/types";
 
 export const addConversation = async (conv: ConversationInput) => {
   const { error } = await supabase.from("conversations").insert([conv]);
-  if (error) throw new Error(error.message);
+  if (error) throw new Error("Failed to add conversation");
 };
 
 export const fetchConversation = async ({

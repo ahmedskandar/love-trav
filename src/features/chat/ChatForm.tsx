@@ -22,7 +22,7 @@ const ChatForm = () => {
     addConversationError,
     isAddingConversation,
   } = useAddConversation();
-
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     sendMessage(input);
