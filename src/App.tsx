@@ -1,4 +1,4 @@
-import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
+import { useNavigate, Routes, Route } from "react-router-dom";
 
 import Reset from "./pages/Reset";
 import Home from "./pages/Home";
@@ -12,7 +12,7 @@ import Signup from "./pages/Signup";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NextUIProvider } from "@nextui-org/react";
-import Chat from "./features/chat/Chat";
+import WorldApp from "./pages/WorldApp";
 
 function App() {
   const navigate = useNavigate();
@@ -24,6 +24,7 @@ function App() {
     },
   });
   return (
+    // For some reason when navigating to a different URL, the query cache gets lost
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <NextUIProvider navigate={navigate}>
@@ -40,16 +41,10 @@ function App() {
             path="app"
             element={
               <NotLoggedInProtection>
-                <div className="flex h-screen items-center justify-center">
-                  <Chat />
-                </div>
+                <WorldApp />
               </NotLoggedInProtection>
             }
-          >
-            <Route index element={<Navigate to={"travels"} replace />} />
-            <Route path="form" element={<p>Form</p>} />
-            <Route path="travels" element={<p>Travels</p>} />
-          </Route>
+          />
           <Route path="*" element={<p>404, No page found</p>} />
         </Routes>
       </NextUIProvider>

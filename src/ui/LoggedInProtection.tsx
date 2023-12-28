@@ -11,7 +11,7 @@ const LoggedInProtection = () => {
 
   //If no authenticated user, redirect
   useEffect(() => {
-    if (isAuthenticated && !isGettingUser) navigate("/app/travels", {replace: true});
+    if (isAuthenticated && !isGettingUser) navigate("/app", {replace: true});
   }, [isAuthenticated, isGettingUser, navigate]);
 
   if (isGettingUser)

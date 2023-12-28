@@ -11,7 +11,7 @@ export const useLogin = () => {
     onSuccess: (user) => {
       queryClient.setQueryData(["user"], user.user);
       toast.success("Successfully logged in");
-      navigate("/app/travels");
+      navigate("/app");
     },
     onError: (error) => toast.error(error.message),
   });
