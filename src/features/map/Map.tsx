@@ -13,6 +13,7 @@ import { Button, useDisclosure } from "@nextui-org/react";
 import TravelTable from "../travel/TravelTable";
 import TravelForm from "../travel/TravelForm";
 import { useUser } from "../../hooks/useUser";
+import { toast } from "sonner";
 
 const Map = ({
   setIsOpen,
@@ -29,9 +30,11 @@ const Map = ({
     onOpenChange: onFormOpenChange,
   } = useDisclosure();
 
+  if(isGettingTravels) toast.loading("Loading travel positions")
+
   return (
     <>
-      <div className="absolute z-10 mt-5 flex w-full justify-center">
+      <div className="absolute z-10 mt-5 left-1/2 top-8 -translate-x-1/2 -translate-y-1/2">
         <Button
           onClick={() => {
             onOpen();

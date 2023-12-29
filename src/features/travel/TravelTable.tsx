@@ -6,6 +6,7 @@ import {
   ModalFooter,
   Button,
   Tooltip,
+  Spinner,
 } from "@nextui-org/react";
 import {
   Table,
@@ -31,7 +32,6 @@ const TravelTable = ({
   const { user } = useUser();
   const { deleteTravel, isTravelDeleting } = useDeleteTravel();
   const { travels, isGettingTravels } = useGetTravels(user!.id);
-  if (isGettingTravels) return;
   return (
     <Modal
       size="3xl"
@@ -50,6 +50,7 @@ const TravelTable = ({
               <Table
                 classNames={{
                   th: "bg-yellow-200",
+                  table: isGettingTravels && "min-h-[300px]",
                 }}
                 removeWrapper
                 aria-label="Example static collection table"
@@ -64,7 +65,9 @@ const TravelTable = ({
                   <TableColumn>ACTIONS</TableColumn>
                 </TableHeader>
                 <TableBody
-                  items={travels}
+                  isLoading={isGettingTravels}
+                  loadingContent={<Spinner label="Loading..." color="warning" />}
+                  items={travels ?? []}
                   emptyContent={"No travels recorded yet."}
                 >
                   {(travel) => (
