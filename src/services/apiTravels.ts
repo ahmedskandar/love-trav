@@ -11,8 +11,7 @@ export const getTravels = async (id: string) => {
   return travels as {
     id: number;
     created_at: Date;
-    country: string;
-    city: string;
+    place: string;
     notes: string;
     longitude: number;
     latitude: number;

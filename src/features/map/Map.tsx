@@ -22,6 +22,7 @@ const Map = ({
 }) => {
   const { user } = useUser();
   const { travels, isGettingTravels } = useGetTravels(user!.id);
+  const [shouldUpdateCenter, setShouldUpdateCenter] = useState(false);
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([40, 0]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
@@ -30,11 +31,11 @@ const Map = ({
     onOpenChange: onFormOpenChange,
   } = useDisclosure();
 
-  if(isGettingTravels) toast.loading("Loading travel positions")
+  if (isGettingTravels) toast.loading("Loading travel positions");
 
   return (
     <>
-      <div className="absolute z-10 mt-5 left-1/2 top-8 -translate-x-1/2 -translate-y-1/2">
+      <div className="absolute left-1/2 top-8 z-10 mt-5 -translate-x-1/2 -translate-y-1/2">
         <Button
           onClick={() => {
             onOpen();
@@ -61,15 +62,31 @@ const Map = ({
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-600 text-lg text-white">
                 <span>{travel.id}</span>
               </div>
-              <div>{travel.city}</div>
+              <div>{travel.place}</div>
             </Popup>
           </Marker>
         ))}
-        <ChangeCenter position={mapPosition} />
-        <DetectClick setMapPosition={setMapPosition} onOpen={onFormOpen} setIsOpen={setIsOpen} />
+        {shouldUpdateCenter && <ChangeCenter position={mapPosition} />}
+        <DetectClick
+          setMapPosition={setMapPosition}
+          onOpen={() => {
+            setShouldUpdateCenter(true);
+            onFormOpen();
+          }}
+          setIsOpen={setIsOpen}
+        />
       </MapContainer>
-      <TravelTable isOpen={isOpen} onOpenChange={onOpenChange} />
-      <TravelForm isOpen={isFormOpen} onOpenChange={onFormOpenChange} />
+      <TravelTable
+        setMapPosition={setMapPosition}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        setShouldUpdateCenter={setShouldUpdateCenter}
+      />
+      <TravelForm
+        isOpen={isFormOpen}
+        setShouldUpdateCenter={setShouldUpdateCenter}
+        onOpenChange={onFormOpenChange}
+      />
     </>
   );
 };
@@ -83,7 +100,8 @@ const ChangeCenter = ({ position }: { position: LatLngExpression }) => {
 const DetectClick = ({
   onOpen,
   setIsOpen,
-setMapPosition}: {
+  setMapPosition,
+}: {
   onOpen: () => void;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
@@ -92,7 +110,7 @@ setMapPosition}: {
     click: (e) => {
       onOpen();
       setIsOpen(false);
-      setMapPosition(e.latlng)
+      setMapPosition(e.latlng);
     },
   });
   return null;

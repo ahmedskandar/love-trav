@@ -7,18 +7,27 @@ import {
   Button,
   Input,
   Textarea,
+  Switch,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
+import { useState } from "react";
 
 const TravelForm = ({
   isOpen,
   onOpenChange,
+  setShouldUpdateCenter,
 }: {
   isOpen: boolean;
   onOpenChange: () => void;
+  setShouldUpdateCenter: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const [isPositionSelected, setIsPositionSelected] = useState(false);
+
   return (
     <Modal
       backdrop="blur"
+      onClose={() => setShouldUpdateCenter(false)}
       className="z-10"
       isOpen={isOpen}
       onOpenChange={onOpenChange}
@@ -30,19 +39,37 @@ const TravelForm = ({
               Add Travel
             </ModalHeader>
             <ModalBody>
-              <Input color="warning" label="City" />
-              <Input color="warning" label="Country" isDisabled />
+              <Switch
+                isSelected={isPositionSelected}
+                onValueChange={setIsPositionSelected}
+                color="warning"
+              >
+                Search by position
+              </Switch>
+              <Autocomplete
+                isRequired
+                color="warning"
+                label="Search place"
+                isDisabled={isPositionSelected}
+              >
+                <AutocompleteItem key="cat" value="cat">
+                  Cat
+                </AutocompleteItem>
+                <AutocompleteItem key="dog" value="dog">
+                  Dog
+                </AutocompleteItem>
+              </Autocomplete>
               <Input
                 color="warning"
                 type="number"
                 label="Latitude"
-                isDisabled
+                isDisabled={!isPositionSelected}
               />
               <Input
                 color="warning"
                 type="number"
                 label="Longitude"
-                isDisabled
+                isDisabled={!isPositionSelected}
               />
               <Textarea color="warning" label="Notes" />
             </ModalBody>

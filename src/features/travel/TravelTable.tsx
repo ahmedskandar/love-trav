@@ -18,16 +18,25 @@ import {
 } from "@nextui-org/react";
 import { useGetTravels } from "../../hooks/useGetTravels";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faPaperPlane,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { useUser } from "../../hooks/useUser";
 import { useDeleteTravel } from "./useDeleteTravel";
+import { LatLngExpression } from "leaflet";
 
 const TravelTable = ({
   isOpen,
   onOpenChange,
+  setMapPosition,
+  setShouldUpdateCenter,
 }: {
   isOpen: boolean;
   onOpenChange: () => void;
+  setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
+  setShouldUpdateCenter: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { user } = useUser();
   const { deleteTravel, isTravelDeleting } = useDeleteTravel();
@@ -57,8 +66,7 @@ const TravelTable = ({
               >
                 <TableHeader>
                   <TableColumn>ID</TableColumn>
-                  <TableColumn>CITY</TableColumn>
-                  <TableColumn>COUNTRY</TableColumn>
+                  <TableColumn>PLACE</TableColumn>
                   <TableColumn>LATITUDE</TableColumn>
                   <TableColumn>LONGITUDE</TableColumn>
                   <TableColumn>NOTES</TableColumn>
@@ -66,28 +74,50 @@ const TravelTable = ({
                 </TableHeader>
                 <TableBody
                   isLoading={isGettingTravels}
-                  loadingContent={<Spinner label="Loading..." color="warning" />}
+                  loadingContent={
+                    <Spinner label="Loading..." color="warning" />
+                  }
                   items={travels ?? []}
                   emptyContent={"No travels recorded yet."}
                 >
                   {(travel) => (
                     <TableRow key={travel.id}>
                       <TableCell>{travel.id}</TableCell>
-                      <TableCell>{travel.city}</TableCell>
-                      <TableCell>{travel.country}</TableCell>
+                      <TableCell>{travel.place}</TableCell>
                       <TableCell>{travel.latitude.toFixed(3)}</TableCell>
                       <TableCell>{travel.longitude.toFixed(3)}</TableCell>
                       <TableCell>{travel.notes}</TableCell>
                       <TableCell className="space-x-3">
+                        <Tooltip content="View">
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              setMapPosition([
+                                travel.latitude,
+                                travel.longitude,
+                              ]);
+                              onClose();
+                              setShouldUpdateCenter(true)
+                              setTimeout(
+                                () => setShouldUpdateCenter(false),
+                                10,
+                              );
+                              
+                            }}
+                            isIconOnly
+                          >
+                            <FontAwesomeIcon icon={faPaperPlane} />
+                          </Button>
+                        </Tooltip>
                         <Tooltip content="Edit">
-                          <Button variant="ghost" isIconOnly>
+                          <Button variant="flat" isIconOnly>
                             <FontAwesomeIcon icon={faEdit} />
                           </Button>
                         </Tooltip>
-                        <Tooltip content="Delete">
+                        <Tooltip content="Delete" color="danger">
                           <Button
                             isLoading={isTravelDeleting}
-                            variant="flat"
+                            color="danger"
                             onClick={() => deleteTravel(travel.id)}
                             isIconOnly
                           >
@@ -104,7 +134,14 @@ const TravelTable = ({
               <Button color="danger" variant="light" onPress={onClose}>
                 Close
               </Button>
-              {travels && <Button onPress={onClose}>Add travels</Button>}
+              {travels && (
+                <Button
+                  className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white"
+                  onPress={onClose}
+                >
+                  Add travels
+                </Button>
+              )}
             </ModalFooter>
           </>
         )}
