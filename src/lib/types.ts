@@ -7,6 +7,7 @@ import {
   loginSchema,
   resetSchema,
   signUpSchema,
+  travelFormSchema,
   updateSchema,
 } from "./schemas";
 import { User } from "@supabase/supabase-js";
@@ -111,3 +112,5 @@ export type Conversation = {
 export type ConversationParams = {
   clientChatSlug: string;
 };
+
+export type TTravelFormSchema = z.infer<typeof travelFormSchema>

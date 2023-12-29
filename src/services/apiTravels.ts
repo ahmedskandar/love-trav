@@ -19,10 +19,18 @@ export const getTravels = async (id: string) => {
 };
 
 export const deleteTravel = async (id: number) => {
-  const { error } = await supabase
-    .from("travels")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("travels").delete().eq("id", id);
+
+  if (error) throw new Error("Error: " + error.message);
+};
+
+export const addTravel = async (travel: {
+  notes: string;
+  longitude: number;
+  latitude: number;
+  user_id: string;
+}) => {
+  const { error } = await supabase.from("travels").insert([travel]);
 
   if (error) throw new Error("Error: " + error.message);
 };

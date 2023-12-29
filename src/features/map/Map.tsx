@@ -29,6 +29,7 @@ const Map = ({
     isOpen: isFormOpen,
     onOpen: onFormOpen,
     onOpenChange: onFormOpenChange,
+    onClose: onFormClose
   } = useDisclosure();
 
   if (isGettingTravels) toast.loading("Loading travel positions");
@@ -83,6 +84,8 @@ const Map = ({
         setShouldUpdateCenter={setShouldUpdateCenter}
       />
       <TravelForm
+        setMapPosition={setMapPosition}
+        onClose={onFormClose}
         isOpen={isFormOpen}
         setShouldUpdateCenter={setShouldUpdateCenter}
         onOpenChange={onFormOpenChange}

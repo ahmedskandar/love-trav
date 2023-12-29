@@ -5,7 +5,7 @@ export const envSchema = z.object({
   VITE_RAPID_API_KEY: z.string().min(1),
 });
 
-export const parsedEnv = envSchema.parse(import.meta.env)
+export const parsedEnv = envSchema.parse(import.meta.env);
 
 export const signUpSchema = z
   .object({
@@ -14,7 +14,7 @@ export const signUpSchema = z
     nationality: z.set(z.string()).or(z.string()),
     username: z.string(),
     confirmPassword: z.string(),
-    image: z.any()
+    image: z.any(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords must match",
@@ -84,4 +84,10 @@ export const ConversationResponseSchema = z.object({
     }),
   }),
   message: z.string(),
+});
+
+export const travelFormSchema = z.object({
+  notes: z.string().trim(),
+  longitude: z.coerce.number(),
+  latitude: z.coerce.number(),
 });

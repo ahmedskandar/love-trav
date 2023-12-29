@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Modal,
   ModalContent,
@@ -7,22 +8,48 @@ import {
   Button,
   Input,
   Textarea,
-  Switch,
-  Autocomplete,
-  AutocompleteItem,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { LatLngExpression } from "leaflet";
+import { useForm } from "react-hook-form";
+import { travelFormSchema } from "../../lib/schemas";
+import { TTravelFormSchema } from "../../lib/types";
+import { useAddTravel } from "./useAddTravel";
+import { useUser } from "../../hooks/useUser";
 
 const TravelForm = ({
   isOpen,
   onOpenChange,
   setShouldUpdateCenter,
+  setMapPosition,
+  onClose
 }: {
   isOpen: boolean;
+  onClose: () => void,
   onOpenChange: () => void;
+  setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
   setShouldUpdateCenter: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [isPositionSelected, setIsPositionSelected] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<TTravelFormSchema>({
+    resolver: zodResolver(travelFormSchema),
+  });
+
+  const {user} = useUser()
+  const {addTravel, isTravelAdding} = useAddTravel()
+
+  const onSubmit = (data: TTravelFormSchema) => {
+    addTravel({...data, user_id: user!.id})
+     setMapPosition([data.latitude, data.longitude]);
+     setTimeout(() => {
+       onClose();
+       setShouldUpdateCenter(false);
+     }, 1);
+     reset()
+  };
 
   return (
     <Modal
@@ -39,56 +66,49 @@ const TravelForm = ({
               Add Travel
             </ModalHeader>
             <ModalBody>
-              <Switch
-                isSelected={isPositionSelected}
-                onValueChange={setIsPositionSelected}
-                color="warning"
-              >
-                Search by position
-              </Switch>
-              <Autocomplete
-                isRequired
-                color="warning"
-                label="Search place"
-                isDisabled={isPositionSelected}
-              >
-                <AutocompleteItem key="cat" value="cat">
-                  Cat
-                </AutocompleteItem>
-                <AutocompleteItem key="dog" value="dog">
-                  Dog
-                </AutocompleteItem>
-              </Autocomplete>
-              <Input
-                color="warning"
-                type="number"
-                label="Latitude"
-                isDisabled={!isPositionSelected}
-              />
-              <Input
-                color="warning"
-                type="number"
-                label="Longitude"
-                isDisabled={!isPositionSelected}
-              />
-              <Textarea color="warning" label="Notes" />
+              {/* eslint-disable-next-line */}
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+                <Input
+                  {...register("latitude")}
+                  isInvalid={!!errors.latitude}
+                  errorMessage={errors.latitude?.message}
+                  color="warning"
+                  type="number"
+                  label="Latitude"
+                />
+                <Input
+                  {...register("longitude")}
+                  isInvalid={!!errors.longitude}
+                  errorMessage={errors.longitude?.message}
+                  color="warning"
+                  type="number"
+                  label="Longitude"
+                />
+                <Textarea
+                  color="warning"
+                  label="Notes"
+                  {...register("notes")}
+                />
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Close
+                  </Button>
+                  <Button isLoading={isTravelAdding} type="submit" className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white">
+                    ADD
+                  </Button>
+                </ModalFooter>
+              </form>
             </ModalBody>
-            <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
-                Close
-              </Button>
-              <Button
-                className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white"
-                onPress={onClose}
-              >
-                Action
-              </Button>
-            </ModalFooter>
           </>
         )}
       </ModalContent>
     </Modal>
   );
-};
+}; // onPress={() => {
+  // setMapPosition([40, 0]);
+  // setTimeout(() => {
+  //   onClose();
+  // }, 1);
+// }}
 
 export default TravelForm;
