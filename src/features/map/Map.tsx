@@ -22,14 +22,21 @@ const Map = ({
 }) => {
   const { user } = useUser();
   const { travels, isGettingTravels } = useGetTravels(user!.id);
+  //Guard against map center alteration upon any component rerender
   const [shouldUpdateCenter, setShouldUpdateCenter] = useState(false);
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([40, 0]);
-  const { isOpen, onOpen: onTableForm, onOpenChange: onTableOpenChange } = useDisclosure();
+  const [userSelectedPosition, setUserSelectedPosition] =
+    useState<{lat: number, lng: number} | undefined>();
+  const {
+    isOpen,
+    onOpen: onTableForm,
+    onOpenChange: onTableOpenChange,
+  } = useDisclosure();
   const {
     isOpen: isFormOpen,
     onOpen: onFormOpen,
     onOpenChange: onFormOpenChange,
-    onClose: onFormClose
+    onClose: onFormClose,
   } = useDisclosure();
 
   if (isGettingTravels) toast.loading("Loading travel positions");
@@ -69,6 +76,7 @@ const Map = ({
         ))}
         {shouldUpdateCenter && <ChangeCenter position={mapPosition} />}
         <DetectClick
+          setUserSelectedPosition={setUserSelectedPosition}
           setMapPosition={setMapPosition}
           onOpen={() => {
             setShouldUpdateCenter(true);
@@ -81,11 +89,13 @@ const Map = ({
         setMapPosition={setMapPosition}
         isOpen={isOpen}
         onOpenChange={onTableOpenChange}
-        onFormOpen = {onFormOpen}
+        onFormOpen={onFormOpen}
         setShouldUpdateCenter={setShouldUpdateCenter}
       />
       <TravelForm
+        userSelectedPosition={userSelectedPosition}
         setMapPosition={setMapPosition}
+        setUserSelectedPosition = {setUserSelectedPosition}
         onClose={onFormClose}
         isOpen={isFormOpen}
         setShouldUpdateCenter={setShouldUpdateCenter}
@@ -105,8 +115,12 @@ const DetectClick = ({
   onOpen,
   setIsOpen,
   setMapPosition,
+  setUserSelectedPosition,
 }: {
   onOpen: () => void;
+  setUserSelectedPosition: React.Dispatch<
+    React.SetStateAction<{ lat: number; lng: number } | undefined>
+  >;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
 }) => {
@@ -115,6 +129,7 @@ const DetectClick = ({
       onOpen();
       setIsOpen(false);
       setMapPosition(e.latlng);
+      setUserSelectedPosition({ lat: e.latlng.lat, lng: e.latlng.lng });
     },
   });
   return null;

@@ -117,7 +117,6 @@ const TravelTable = ({
                         </Tooltip>
                         <Tooltip content="Delete" color="danger">
                           <Button
-                            isLoading={isTravelDeleting}
                             color="danger"
                             onClick={() => deleteTravel(travel.id)}
                             isIconOnly
@@ -132,15 +131,20 @@ const TravelTable = ({
               </Table>
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
+              <Button
+                isDisabled={isTravelDeleting}
+                color="danger"
+                variant="light"
+                onPress={onClose}
+              >
                 Close
               </Button>
               {travels && (
                 <Button
+                  isDisabled={isTravelDeleting}
                   className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white"
                   onPress={() => {
-                    setShouldUpdateCenter(true)
-                    onClose()
+                    onClose();
                     onFormOpen();
                   }}
                 >
