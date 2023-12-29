@@ -24,7 +24,7 @@ const Map = ({
   const { travels, isGettingTravels } = useGetTravels(user!.id);
   const [shouldUpdateCenter, setShouldUpdateCenter] = useState(false);
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([40, 0]);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen: onTableForm, onOpenChange: onTableOpenChange } = useDisclosure();
   const {
     isOpen: isFormOpen,
     onOpen: onFormOpen,
@@ -39,7 +39,7 @@ const Map = ({
       <div className="absolute left-1/2 top-8 z-10 mt-5 -translate-x-1/2 -translate-y-1/2">
         <Button
           onClick={() => {
-            onOpen();
+            onTableForm();
             setIsOpen(false);
           }}
           color="warning"
@@ -80,7 +80,8 @@ const Map = ({
       <TravelTable
         setMapPosition={setMapPosition}
         isOpen={isOpen}
-        onOpenChange={onOpenChange}
+        onOpenChange={onTableOpenChange}
+        onFormOpen = {onFormOpen}
         setShouldUpdateCenter={setShouldUpdateCenter}
       />
       <TravelForm

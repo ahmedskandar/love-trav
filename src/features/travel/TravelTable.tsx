@@ -32,16 +32,17 @@ const TravelTable = ({
   onOpenChange,
   setMapPosition,
   setShouldUpdateCenter,
+  onFormOpen,
 }: {
   isOpen: boolean;
   onOpenChange: () => void;
   setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
   setShouldUpdateCenter: React.Dispatch<React.SetStateAction<boolean>>;
+  onFormOpen: () => void;
 }) => {
   const { user } = useUser();
   const { deleteTravel, isTravelDeleting } = useDeleteTravel();
   const { travels, isGettingTravels } = useGetTravels(user!.id);
-  if(isTravelDeleting) console.log("travel is deleting")
   return (
     <Modal
       size="3xl"
@@ -66,7 +67,7 @@ const TravelTable = ({
                 aria-label="Example static collection table"
               >
                 <TableHeader>
-                  <TableColumn>ID</TableColumn>
+                  <TableColumn> </TableColumn>
                   <TableColumn>PLACE</TableColumn>
                   <TableColumn>LATITUDE</TableColumn>
                   <TableColumn>LONGITUDE</TableColumn>
@@ -98,12 +99,11 @@ const TravelTable = ({
                                 travel.longitude,
                               ]);
                               onClose();
-                              setShouldUpdateCenter(true)
+                              setShouldUpdateCenter(true);
                               setTimeout(
                                 () => setShouldUpdateCenter(false),
                                 10,
                               );
-                              
                             }}
                             isIconOnly
                           >
@@ -138,7 +138,11 @@ const TravelTable = ({
               {travels && (
                 <Button
                   className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white"
-                  onPress={onClose}
+                  onPress={() => {
+                    setShouldUpdateCenter(true)
+                    onClose()
+                    onFormOpen();
+                  }}
                 >
                   Add travels
                 </Button>
