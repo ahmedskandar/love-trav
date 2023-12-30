@@ -44,6 +44,7 @@ const TravelTable = ({
   const { user } = useUser();
   const { deleteTravel, isTravelDeleting } = useDeleteTravel();
   const { travels, isGettingTravels } = useGetTravels(user!.id);
+
   return (
     <Modal
       size="5xl"

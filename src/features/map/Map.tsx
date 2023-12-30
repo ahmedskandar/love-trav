@@ -14,6 +14,7 @@ import TravelTable from "../travel/TravelTable";
 import TravelForm from "../travel/TravelForm";
 import { useUser } from "../../hooks/useUser";
 import { toast } from "sonner";
+import { formatDate } from "../../lib/utils";
 
 const Map = ({
   setIsOpen,
@@ -69,7 +70,7 @@ const Map = ({
             position={[travel.latitude, travel.longitude]}
           >
             <Popup>
-              <div className="flex items-center justify-center rounded-md bg-yellow-600 p-2 text-lg text-white">
+              <div className="flex items-center justify-center rounded-sm bg-yellow-600 p-2 text-lg text-white">
                 <span>{travel.id}</span>
               </div>
               <div className="space-y-2">
@@ -85,11 +86,7 @@ const Map = ({
                   </span>
                 </div>
                 <div>
-                  {new Intl.DateTimeFormat("en-US", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  }).format(new Date(travel.created_at))}
+                  {formatDate(travel.created_at)}
                 </div>
               </div>
             </Popup>

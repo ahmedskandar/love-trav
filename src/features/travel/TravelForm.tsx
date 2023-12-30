@@ -18,6 +18,7 @@ import { useAddTravel } from "./useAddTravel";
 import { useUser } from "../../hooks/useUser";
 import { useEffect, useState } from "react";
 import { getPlaceByPosition } from "../../services/apiTravels";
+import { toast } from "sonner";
 
 const TravelForm = ({
   isOpen,
@@ -99,6 +100,8 @@ const TravelForm = ({
       void getPlace();
     }
   }, [userSelectedPosition, setValue]);
+
+  if(isPlaceLoading) toast.loading("Loading...")
 
   return (
     <>

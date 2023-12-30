@@ -26,3 +26,12 @@ export const createClient = async () => {
     if (e instanceof Error) throw new Error(e.message);
   }
 };
+
+
+export const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(date));
+}; 
