@@ -83,69 +83,69 @@ const TravelTable = ({
                   loadingContent={
                     <Spinner label="Loading..." color="warning" />
                   }
-                  items={travels ?? []}
                   emptyContent={"No travels recorded yet."}
                 >
-                  {(travel) => (
-                    <TableRow key={travel.id}>
-                      <TableCell>{travel.id}</TableCell>
-                      <TableCell>{travel.city}</TableCell>
-                      <TableCell className=" space-x-2">
-                        <Avatar
-                          className="inline-block h-6 w-6"
-                          showFallback
-                          name={travel.country_code}
-                          src={`https://flagcdn.com/${travel.country_code}.svg`}
-                        />{" "}
-                        <span>{travel.country}</span>
-                      </TableCell>
-                      <TableCell>{travel.latitude.toFixed(3)}</TableCell>
-                      <TableCell>{travel.longitude.toFixed(3)}</TableCell>
-                      <TableCell className="w-[30%]">{travel.notes}</TableCell>
-                      <TableCell className="space-x-3 text-center">
-                        <Tooltip content="View">
-                          <Button
-                            variant="ghost"
-                            onClick={() => {
-                              setMapPosition([
-                                travel.latitude,
-                                travel.longitude,
-                              ]);
-                              onClose();
-                              setShouldUpdateCenter(true);
-                              setTimeout(
-                                () => setShouldUpdateCenter(false),
-                                10,
-                              );
-                            }}
-                            isIconOnly
-                          >
-                            <FontAwesomeIcon icon={faPaperPlane} />
-                          </Button>
-                        </Tooltip>
-                        <Tooltip content="Edit">
-                          <Button variant="flat" isIconOnly>
-                            <FontAwesomeIcon icon={faEdit} />
-                          </Button>
-                        </Tooltip>
-                        <Tooltip content="Delete" color="danger">
-                          <Button
-                            color="danger"
-                            onClick={() => deleteTravel(travel.id)}
-                            isIconOnly
-                          >
-                            <FontAwesomeIcon icon={faTrash} />
-                          </Button>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  )}
+                  {travels!.map((travel, index) => (
+                      <TableRow key={travel.id}>
+                        <TableCell>{index+1}</TableCell>
+                        <TableCell>{travel.city}</TableCell>
+                        <TableCell className=" space-x-2">
+                          <Avatar
+                            className="inline-block h-6 w-6"
+                            showFallback
+                            name={travel.country_code}
+                            src={`https://flagcdn.com/${travel.country_code}.svg`}
+                          />{" "}
+                          <span>{travel.country}</span>
+                        </TableCell>
+                        <TableCell>{travel.latitude.toFixed(3)}</TableCell>
+                        <TableCell>{travel.longitude.toFixed(3)}</TableCell>
+                        <TableCell className="max-w-[30%]">
+                          {travel.notes}
+                        </TableCell>
+                        <TableCell className="space-x-3 text-center">
+                          <Tooltip content="View">
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                setMapPosition([
+                                  travel.latitude,
+                                  travel.longitude,
+                                ]);
+                                onClose();
+                                setShouldUpdateCenter(true);
+                                setTimeout(
+                                  () => setShouldUpdateCenter(false),
+                                  10,
+                                );
+                              }}
+                              isIconOnly
+                            >
+                              <FontAwesomeIcon icon={faPaperPlane} />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip content="Edit">
+                            <Button variant="flat" isIconOnly>
+                              <FontAwesomeIcon icon={faEdit} />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip content="Delete" color="danger">
+                            <Button
+                              color="danger"
+                              onClick={() => deleteTravel(travel.id)}
+                              isIconOnly
+                            >
+                              <FontAwesomeIcon icon={faTrash} />
+                            </Button>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </ModalBody>
             <ModalFooter>
               <Button
-                isDisabled={isTravelDeleting}
                 color="danger"
                 variant="light"
                 onPress={onClose}

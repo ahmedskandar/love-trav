@@ -64,14 +64,14 @@ const Map = ({
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
         />
 
-        {travels?.map((travel) => (
+        {travels?.map((travel, index) => (
           <Marker
             key={travel.id}
             position={[travel.latitude, travel.longitude]}
           >
             <Popup>
-              <div className="flex items-center justify-center rounded-sm bg-yellow-600 px-2 rounded-l-md text-lg text-white">
-                <span>{travel.id}</span>
+              <div className="flex items-center justify-center rounded-sm bg-yellow-600 px-3 rounded-l-md text-xl text-white">
+                <span>{index+1}</span>
               </div>
               <div className="space-y-2 p-2 pl-4 bg-gray-100 rounded-r-md">
                 <div className="flex items-center justify-center space-x-3">
