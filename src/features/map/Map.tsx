@@ -70,23 +70,26 @@ const Map = ({
             position={[travel.latitude, travel.longitude]}
           >
             <Popup>
-              <div className="flex items-center justify-center rounded-sm bg-yellow-600 p-2 text-lg text-white">
+              <div className="flex items-center justify-center rounded-sm bg-yellow-600 px-2 rounded-l-md text-lg text-white">
                 <span>{travel.id}</span>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 p-2 pl-4 bg-gray-100 rounded-r-md">
                 <div className="flex items-center justify-center space-x-3">
-                  <Avatar
-                    className="inline-block h-6 w-6"
-                    showFallback
-                    name={travel.country_code}
-                    src={`https://flagcdn.com/${travel.country_code}.svg`}
-                  />
-                  <span className="text-lg font-bold">
+                  <div>
+                    <Avatar
+                      size="sm"
+                      showFallback
+                      name={travel.country_code}
+                      src={`https://flagcdn.com/${travel.country_code}.svg`}
+                    />
+                  </div>
+                  {/* Add heading for semanticness */}
+                  <div className="text-lg font-bold">
                     {travel.city}, {travel.country}
-                  </span>
+                  </div>
                 </div>
-                <div>
-                  {formatDate(travel.created_at)}
+                <div className="text-end">
+                  <time dateTime={travel.created_at.toString()}>{formatDate(travel.created_at)}</time>
                 </div>
               </div>
             </Popup>
