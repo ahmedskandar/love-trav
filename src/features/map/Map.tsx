@@ -9,7 +9,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { useGetTravels } from "../../hooks/useGetTravels";
-import { Button, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, useDisclosure } from "@nextui-org/react";
 import TravelTable from "../travel/TravelTable";
 import TravelForm from "../travel/TravelForm";
 import { useUser } from "../../hooks/useUser";
@@ -25,8 +25,9 @@ const Map = ({
   //Guard against map center alteration upon any component rerender
   const [shouldUpdateCenter, setShouldUpdateCenter] = useState(false);
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([40, 0]);
-  const [userSelectedPosition, setUserSelectedPosition] =
-    useState<{lat: number, lng: number} | undefined>();
+  const [userSelectedPosition, setUserSelectedPosition] = useState<
+    { lat: number; lng: number } | undefined
+  >();
   const {
     isOpen,
     onOpen: onTableForm,
@@ -57,7 +58,7 @@ const Map = ({
       </div>
       <MapContainer className="z-0 h-screen" center={mapPosition} zoom={6}>
         <TileLayer
-        noWrap={true}
+          noWrap={true}
           attribution="Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
         />
@@ -68,10 +69,29 @@ const Map = ({
             position={[travel.latitude, travel.longitude]}
           >
             <Popup>
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-600 text-lg text-white">
+              <div className="flex items-center justify-center rounded-md bg-yellow-600 p-2 text-lg text-white">
                 <span>{travel.id}</span>
               </div>
-              <div>{travel.country}</div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-center space-x-3">
+                  <Avatar
+                    className="inline-block h-6 w-6"
+                    showFallback
+                    name={travel.country_code}
+                    src={`https://flagcdn.com/${travel.country_code}.svg`}
+                  />
+                  <span className="text-lg font-bold">
+                    {travel.city}, {travel.country}
+                  </span>
+                </div>
+                <div>
+                  {new Intl.DateTimeFormat("en-US", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  }).format(new Date(travel.created_at))}
+                </div>
+              </div>
             </Popup>
           </Marker>
         ))}
@@ -96,7 +116,7 @@ const Map = ({
       <TravelForm
         userSelectedPosition={userSelectedPosition}
         setMapPosition={setMapPosition}
-        setUserSelectedPosition = {setUserSelectedPosition}
+        setUserSelectedPosition={setUserSelectedPosition}
         onClose={onFormClose}
         isOpen={isFormOpen}
         setShouldUpdateCenter={setShouldUpdateCenter}

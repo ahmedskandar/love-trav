@@ -12,7 +12,7 @@ export const getTravels = async (id: string) => {
 
   if (error) throw new Error("Error: " + error.message);
 
-  return travels as (TTravelFormSchema & {id: number, created_at: Date})[]
+  return travels as (TTravelFormSchema & {id: number, created_at: Date, country_code: string})[]
 };
 
 export const deleteTravel = async (id: number) => {
@@ -26,6 +26,7 @@ export const addTravel = async (travel: {
   longitude: number;
   latitude: number;
   user_id: string;
+  country_code: string
 }) => {
   const { error } = await supabase.from("travels").insert([travel]);
 
@@ -61,6 +62,6 @@ export const getPlaceByPosition = async ({lat, lon}:{lat: string, lon: string}) 
     if(!validatedPlace.success) throw new Error(`Error validating place: ${validatedPlace.error.toString()}`)
     return validatedPlace.data;
   } catch (error) {
-    if(error instanceof Error) toast.error(`Error getting place: ${error.message}`)
+    if(error instanceof Error) toast.error(`Error getting place, please try selecting a valid place`)
   }
 };

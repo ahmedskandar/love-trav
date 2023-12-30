@@ -7,6 +7,7 @@ import {
   Button,
   Tooltip,
   Spinner,
+  Avatar,
 } from "@nextui-org/react";
 import {
   Table,
@@ -59,7 +60,7 @@ const TravelTable = ({
             </ModalHeader>
             <ModalBody>
               <Table
-              isStriped
+                isStriped
                 classNames={{
                   th: "bg-yellow-200",
                   table: isGettingTravels && "min-h-[300px]",
@@ -68,7 +69,7 @@ const TravelTable = ({
                 aria-label="Example static collection table"
               >
                 <TableHeader>
-                  <TableColumn> </TableColumn>
+                  <TableColumn>NO.</TableColumn>
                   <TableColumn>CITY</TableColumn>
                   <TableColumn>COUNTRY</TableColumn>
                   <TableColumn>LATITUDE</TableColumn>
@@ -88,10 +89,18 @@ const TravelTable = ({
                     <TableRow key={travel.id}>
                       <TableCell>{travel.id}</TableCell>
                       <TableCell>{travel.city}</TableCell>
-                      <TableCell>{travel.country}</TableCell>
+                      <TableCell className=" space-x-2">
+                        <Avatar
+                          className="inline-block h-6 w-6"
+                          showFallback
+                          name={travel.country_code}
+                          src={`https://flagcdn.com/${travel.country_code}.svg`}
+                        />{" "}
+                        <span>{travel.country}</span>
+                      </TableCell>
                       <TableCell>{travel.latitude.toFixed(3)}</TableCell>
                       <TableCell>{travel.longitude.toFixed(3)}</TableCell>
-                      <TableCell className="w-1/3">{travel.notes}</TableCell>
+                      <TableCell className="w-[30%]">{travel.notes}</TableCell>
                       <TableCell className="space-x-3 text-center">
                         <Tooltip content="View">
                           <Button
