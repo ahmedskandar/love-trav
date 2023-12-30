@@ -3,6 +3,7 @@ import { z } from "zod";
 export const envSchema = z.object({
   VITE_SUPABASE_API_KEY: z.string().min(1),
   VITE_RAPID_API_KEY: z.string().min(1),
+  VITE_REVERSE_GEOCODING_RAPID_API_KEY: z.string().min(1),
 });
 
 export const parsedEnv = envSchema.parse(import.meta.env);
@@ -88,6 +89,30 @@ export const ConversationResponseSchema = z.object({
 
 export const travelFormSchema = z.object({
   notes: z.string().trim(),
+  city: z.string().trim(),
+  country: z.string().trim(),
   longitude: z.coerce.number(),
   latitude: z.coerce.number(),
+});
+
+export const placeSchema = z.object({
+  licence: z.string(),
+  osm_id: z.number(),
+  address: z.object({
+    region: z.string().optional(),
+    county: z.string().optional(),
+    village: z.string().optional(),
+    locality: z.string().optional(),
+    country_code: z.string(),
+    country: z.string(),
+    state: z.string().optional(),
+    municipality: z.string().optional(),
+    postcode: z.string().optional(),
+  }),
+  osm_type: z.string(),
+  boundingbox: z.array(z.string()),
+  place_id: z.number(),
+  lat: z.string(),
+  lon: z.string(),
+  display_name: z.string(),
 });

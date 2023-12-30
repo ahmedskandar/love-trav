@@ -1,4 +1,8 @@
+import { rapidApiReverseGeocodingKey } from "../lib/constants";
+import { TPlaceSchema, TTravelFormSchema } from "../lib/types";
 import { supabase } from "./supabase";
+import { placeSchema } from "../lib/schemas";
+import { toast } from "sonner";
 
 export const getTravels = async (id: string) => {
   const { data: travels, error } = await supabase
@@ -8,14 +12,7 @@ export const getTravels = async (id: string) => {
 
   if (error) throw new Error("Error: " + error.message);
 
-  return travels as {
-    id: number;
-    created_at: Date;
-    place: string;
-    notes: string;
-    longitude: number;
-    latitude: number;
-  }[];
+  return travels as (TTravelFormSchema & {id: number, created_at: Date})[]
 };
 
 export const deleteTravel = async (id: number) => {
@@ -33,4 +30,37 @@ export const addTravel = async (travel: {
   const { error } = await supabase.from("travels").insert([travel]);
 
   if (error) throw new Error("Error: " + error.message);
+};
+
+//Handle loading and error state
+export const getPlaceByPosition = async ({lat, lon}:{lat: string, lon: string}) => {
+  const apiUrl = "https://forward-reverse-geocoding.p.rapidapi.com/v1/reverse";
+  const params = new URLSearchParams({
+    lat,
+    lon,
+    "accept-language": "en",
+  });
+
+  const headers = {
+    "X-RapidAPI-Key": rapidApiReverseGeocodingKey,
+    "X-RapidAPI-Host": "forward-reverse-geocoding.p.rapidapi.com",
+  };
+
+  try {
+    const response = await fetch(`${apiUrl}?${params.toString()}`, {
+      method: "GET",
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error gettingplace by position: ${response.status}`);
+    }
+
+    const place = await response.json() as TPlaceSchema; 
+    const validatedPlace = placeSchema.safeParse(place)
+    if(!validatedPlace.success) throw new Error(`Error validating place: ${validatedPlace.error.toString()}`)
+    return validatedPlace.data;
+  } catch (error) {
+    if(error instanceof Error) toast.error(`Error getting place: ${error.message}`)
+  }
 };

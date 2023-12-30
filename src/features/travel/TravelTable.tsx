@@ -45,7 +45,7 @@ const TravelTable = ({
   const { travels, isGettingTravels } = useGetTravels(user!.id);
   return (
     <Modal
-      size="3xl"
+      size="5xl"
       backdrop="blur"
       className="z-10"
       isOpen={isOpen}
@@ -59,6 +59,7 @@ const TravelTable = ({
             </ModalHeader>
             <ModalBody>
               <Table
+              isStriped
                 classNames={{
                   th: "bg-yellow-200",
                   table: isGettingTravels && "min-h-[300px]",
@@ -68,11 +69,12 @@ const TravelTable = ({
               >
                 <TableHeader>
                   <TableColumn> </TableColumn>
-                  <TableColumn>PLACE</TableColumn>
+                  <TableColumn>CITY</TableColumn>
+                  <TableColumn>COUNTRY</TableColumn>
                   <TableColumn>LATITUDE</TableColumn>
                   <TableColumn>LONGITUDE</TableColumn>
-                  <TableColumn>NOTES</TableColumn>
-                  <TableColumn>ACTIONS</TableColumn>
+                  <TableColumn className="text-center">NOTES</TableColumn>
+                  <TableColumn className="text-center">ACTIONS</TableColumn>
                 </TableHeader>
                 <TableBody
                   isLoading={isGettingTravels}
@@ -85,11 +87,12 @@ const TravelTable = ({
                   {(travel) => (
                     <TableRow key={travel.id}>
                       <TableCell>{travel.id}</TableCell>
-                      <TableCell>{travel.place}</TableCell>
+                      <TableCell>{travel.city}</TableCell>
+                      <TableCell>{travel.country}</TableCell>
                       <TableCell>{travel.latitude.toFixed(3)}</TableCell>
                       <TableCell>{travel.longitude.toFixed(3)}</TableCell>
-                      <TableCell>{travel.notes}</TableCell>
-                      <TableCell className="space-x-3">
+                      <TableCell className="w-1/3">{travel.notes}</TableCell>
+                      <TableCell className="space-x-3 text-center">
                         <Tooltip content="View">
                           <Button
                             variant="ghost"

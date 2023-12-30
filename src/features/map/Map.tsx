@@ -57,6 +57,7 @@ const Map = ({
       </div>
       <MapContainer className="z-0 h-screen" center={mapPosition} zoom={6}>
         <TileLayer
+        noWrap={true}
           attribution="Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
         />
@@ -70,7 +71,7 @@ const Map = ({
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-600 text-lg text-white">
                 <span>{travel.id}</span>
               </div>
-              <div>{travel.place}</div>
+              <div>{travel.country}</div>
             </Popup>
           </Marker>
         ))}

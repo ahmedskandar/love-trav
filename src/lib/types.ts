@@ -5,6 +5,7 @@ import { z } from "zod";
 import {
   ConversationResponseSchema,
   loginSchema,
+  placeSchema,
   resetSchema,
   signUpSchema,
   travelFormSchema,
@@ -114,3 +115,5 @@ export type ConversationParams = {
 };
 
 export type TTravelFormSchema = z.infer<typeof travelFormSchema>
+
+export type TPlaceSchema = z.infer<typeof placeSchema>
