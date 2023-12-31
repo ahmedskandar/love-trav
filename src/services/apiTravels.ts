@@ -2,7 +2,6 @@ import { rapidApiReverseGeocodingKey } from "../lib/constants";
 import { TPlaceSchema, TTravelFormSchema } from "../lib/types";
 import { supabase } from "./supabase";
 import { placeSchema } from "../lib/schemas";
-import { toast } from "sonner";
 
 export const getTravels = async (id: string) => {
   const { data: travels, error } = await supabase
@@ -39,41 +38,35 @@ export const addTravel = async (travel: {
 
 export const getPlaceByPosition = async ({
   lat,
-  lon,
+  lng,
 }: {
-  lat: string;
-  lon: string;
+  lat: number;
+ lng: number;
 }) => {
   const apiUrl = "https://forward-reverse-geocoding.p.rapidapi.com/v1/reverse";
-  const params = new URLSearchParams({
-    lat,
-    lon,
-    "accept-language": "en",
-  });
+  // const params = new URLSearchParams({
+  //   lat,
+  //   lon,
+  //   "accept-language": "en",
+  // });
 
   const headers = {
     "X-RapidAPI-Key": rapidApiReverseGeocodingKey,
     "X-RapidAPI-Host": "forward-reverse-geocoding.p.rapidapi.com",
   };
+  const response = await fetch(`${apiUrl}?lat=${lat}&lon=${lng}`, {
+    method: "GET",
+    headers,
+  });
 
-  try {
-    const response = await fetch(`${apiUrl}?${params.toString()}`, {
-      method: "GET",
-      headers,
-    });
+  if (!response.ok) throw new Error("Error getting place");
 
-    if (!response.ok) {
-      throw new Error(`Error gettingplace by position: ${response.status}`);
-    }
+  const place = (await response.json()) as TPlaceSchema;
+  if (!place) throw new Error("No place found");
 
-    const place = (await response.json()) as TPlaceSchema;
-    const validatedPlace = placeSchema.safeParse(place);
-    if (!validatedPlace.success) throw new Error();
-    return validatedPlace.data;
-  } catch (error) {
-    if (error instanceof Error)
-       toast.error(
-        `Error getting place, please try selecting a valid place`,
-      );
-  }
+  const validatedPlace = placeSchema.safeParse(place);
+  if (!validatedPlace.success)
+    throw new Error(`Error getting place, please try selecting a valid place`);
+
+  return validatedPlace.data;
 };

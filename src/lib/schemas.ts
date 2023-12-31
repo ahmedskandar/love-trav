@@ -112,7 +112,7 @@ export const placeSchema = z.object({
   osm_type: z.string(),
   boundingbox: z.array(z.string()),
   place_id: z.number(),
-  lat: z.string(),
-  lon: z.string(),
+  lat: z.coerce.number(),
+  lon: z.coerce.number(),
   display_name: z.string(),
 });

@@ -1,4 +1,4 @@
-import { LatLngExpression } from "leaflet";
+import { LatLng, LatLngExpression } from "leaflet";
 import { useState } from "react";
 import {
   MapContainer,
@@ -15,6 +15,8 @@ import TravelForm from "../travel/TravelForm";
 import { useUser } from "../../hooks/useUser";
 import { toast } from "sonner";
 import { formatDate } from "../../lib/utils";
+import { getPlaceByPosition } from "../../services/apiTravels";
+import { TPlaceSchema } from "../../lib/types";
 
 const Map = ({
   setIsOpen,
@@ -26,6 +28,7 @@ const Map = ({
   //Guard against map center alteration upon any component rerender
   const [shouldUpdateCenter, setShouldUpdateCenter] = useState(false);
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([40, 0]);
+  const [place, setPlace] = useState<TPlaceSchema | undefined>();
   const [userSelectedPosition, setUserSelectedPosition] = useState<
     { lat: number; lng: number } | undefined
   >();
@@ -42,6 +45,7 @@ const Map = ({
   } = useDisclosure();
 
   if (isGettingTravels) toast.loading("Loading travel positions");
+
   return (
     <>
       <div className="absolute left-1/2 top-8 z-10 mt-5 -translate-x-1/2 -translate-y-1/2">
@@ -58,9 +62,9 @@ const Map = ({
           </Button>
           <Button
             onPress={() => {
-            console.log('pressed')
               onFormOpen();
-            
+              // setPlaceError("");
+              setUserSelectedPosition(undefined);
             }}
             color="warning"
             variant="faded"
@@ -112,6 +116,7 @@ const Map = ({
         ))}
         {shouldUpdateCenter && <ChangeCenter position={mapPosition} />}
         <DetectClick
+          setPlace={setPlace}
           setUserSelectedPosition={setUserSelectedPosition}
           setMapPosition={setMapPosition}
           onOpen={() => {
@@ -129,7 +134,9 @@ const Map = ({
         setShouldUpdateCenter={setShouldUpdateCenter}
       />
       <TravelForm
-      
+        // placeError={placeError}
+        // setPlaceError={setPlaceError}
+        place={place}
         userSelectedPosition={userSelectedPosition}
         setMapPosition={setMapPosition}
         setUserSelectedPosition={setUserSelectedPosition}
@@ -153,6 +160,7 @@ const DetectClick = ({
   setIsOpen,
   setMapPosition,
   setUserSelectedPosition,
+  setPlace,
 }: {
   onOpen: () => void;
   setUserSelectedPosition: React.Dispatch<
@@ -160,13 +168,36 @@ const DetectClick = ({
   >;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
+  setPlace: React.Dispatch<React.SetStateAction<TPlaceSchema | undefined>>;
 }) => {
+  // const [userSelectedPosition, setUserSelectedPosition] = useState<
+  //   { lat: number; lng: number } | undefined
+  // >(); 
+
+  const checkUserPositionValidity = async (latlng: LatLng) => {
+    let place;
+    try {
+      toast.loading('Loading...')
+      place = await getPlaceByPosition({
+        lat: latlng.lat,
+        lng: latlng.lng,
+      });
+    } catch (e) {
+      if (e instanceof Error) toast.error(e.message);
+      return;
+    }
+    //Place is valid and exists
+    //Open form and do all those
+    setPlace(place);
+    setUserSelectedPosition({ lat: place.lat, lng: place.lon });
+    onOpen();
+    setIsOpen(false);
+    setMapPosition(latlng);
+  };
+
   useMapEvents({
     click: (e) => {
-      onOpen();
-      setIsOpen(false);
-      setMapPosition(e.latlng);
-      setUserSelectedPosition({ lat: e.latlng.lat, lng: e.latlng.lng });
+      void checkUserPositionValidity(e.latlng);
     },
   });
   return null;

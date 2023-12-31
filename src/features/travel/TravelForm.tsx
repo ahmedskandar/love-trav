@@ -13,12 +13,12 @@ import {
 import { LatLngExpression } from "leaflet";
 import { useForm } from "react-hook-form";
 import { travelFormSchema } from "../../lib/schemas";
-import { TTravelFormSchema } from "../../lib/types";
+import { TPlaceSchema, TTravelFormSchema } from "../../lib/types";
 import { useAddTravel } from "./useAddTravel";
 import { useUser } from "../../hooks/useUser";
 import { useEffect, useState } from "react";
 import { getPlaceByPosition } from "../../services/apiTravels";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 const TravelForm = ({
   isOpen,
@@ -28,7 +28,10 @@ const TravelForm = ({
   setUserSelectedPosition,
   setMapPosition,
   onClose,
-}: {
+  place,
+} // placeError,
+// setPlaceError,
+: {
   isOpen: boolean;
   setUserSelectedPosition: React.Dispatch<
     React.SetStateAction<{ lat: number; lng: number } | undefined>
@@ -38,6 +41,9 @@ const TravelForm = ({
   onOpenChange: () => void;
   setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
   setShouldUpdateCenter: React.Dispatch<React.SetStateAction<boolean>>;
+  place: TPlaceSchema | undefined;
+  // placeError: string;
+  // setPlaceError: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const {
     register,
@@ -52,11 +58,10 @@ const TravelForm = ({
 
   const { user } = useUser();
   const { addTravel, isTravelAdding } = useAddTravel();
-  const [isPlaceLoading2, setIsPlaceLoading2] = useState(false);
+  // const [isPlaceLoading2, setIsPlaceLoading2] = useState(false);
   const [isPlaceLoading, setIsPlaceLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("");
-  const [placeError, setPlaceError] = useState("");
-    console.log('render');
+  // console.log({ placeError });
 
   const onSubmit = (data: TTravelFormSchema) => {
     setMapPosition([data.latitude, data.longitude]);
@@ -70,16 +75,15 @@ const TravelForm = ({
     reset();
     setUserSelectedPosition(undefined);
     setCountryCode("");
-    setIsPlaceLoading2(false);
   };
 
   const handleBlur = () => {
     const fetchData = async () => {
       if (getValues("latitude") && getValues("longitude")) {
-        setIsPlaceLoading2(true);
+        setIsPlaceLoading(true);
         const place = await getPlaceByPosition({
-          lat: getValues("latitude").toString(),
-          lon: getValues("longitude").toString(),
+          lat: getValues("latitude"),
+          lng: getValues("longitude"),
         });
 
         const city =
@@ -92,169 +96,153 @@ const TravelForm = ({
         setValue("city", city);
         setCountryCode(place?.address.country_code ?? "");
         setValue("country", place?.address.country ?? "");
-        setIsPlaceLoading2(false);
+        setIsPlaceLoading(false);
       }
     };
 
     void fetchData();
   };
-  useEffect(() => {
-    if (!userSelectedPosition) setPlaceError("");
-    console.log(placeError);
-  }, [placeError, userSelectedPosition]);
-
   // defaultValue only sets the initial value when the component is first rendered,
   //and it won’t update if the userSelectedPosition state changes.
   useEffect(() => {
     if (userSelectedPosition) {
+      // setPlaceError("");
+
+      setCountryCode(place?.address.country_code ?? "");
+      const city =
+        place?.address.state ??
+        place?.address.country ??
+        place?.address.region ??
+        place?.address.locality ??
+        place?.address.village ??
+        "";
+      // if (!place?.address.country || !city)  return setUserSelectedPosition(undefined)
       setValue("latitude", userSelectedPosition.lat);
       setValue("longitude", userSelectedPosition.lng);
-
-      const getPlace = async () => {
-        setPlaceError("");
-        setIsPlaceLoading(true);
-        const place = await getPlaceByPosition({
-          lat: userSelectedPosition.lat.toString(),
-          lon: userSelectedPosition.lng.toString(),
-        });
-        setCountryCode(place?.address.country_code ?? "");
-        const city =
-          place?.address.state ??
-          place?.address.country ??
-          place?.address.region ??
-          place?.address.locality ??
-          place?.address.village ??
-          "";
-        setValue("city", city);
-        setValue("country", place?.address.country ?? "");
-        if (!place?.address.country) setPlaceError("error");
-        // !place?.address.country && !city && setPlaceError("Error");
-        setIsPlaceLoading(false);
-      };
-
-      void getPlace();
+      setValue("city", city);
+      setValue("country", place?.address.country ?? "");
+      // !place?.address.country && !city && setPlaceError("Error");
     }
-  }, [userSelectedPosition, setValue, setUserSelectedPosition]);
+  }, [place?.address, setValue, userSelectedPosition]);
 
-  if (isPlaceLoading) return toast.loading("Loading...");
+  // if (isPlaceLoading) return toast.loading("Loading...");
   // if (!isPlaceLoading && placeError) {
   //   setUserSelectedPosition(undefined);
   //   setShouldUpdateCenter(false);
   //   return;
   // }
+  // if (placeError) onClose();
 
   return (
     <>
-      {!isPlaceLoading && !placeError && (
-        <Modal
-          backdrop="blur"
-          onClose={() => {
-            setShouldUpdateCenter(false);
-            setUserSelectedPosition(undefined);
-            reset();
-            setCountryCode("");
-            setIsPlaceLoading2(false);
-            reset();
-            setPlaceError("");
-          }}
-          className="z-10"
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-        >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1 font-serif text-3xl text-yellow-600">
-                  Add Travel
-                </ModalHeader>
-                <ModalBody>
-                  {/* eslint-disable-next-line */}
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
-                    {/* When input is disabled, it returns undefined value */}
-                    <Input
-                      {...register("city")}
-                      isInvalid={!!errors.city}
-                      errorMessage={errors.city?.message}
-                      color="warning"
-                      isRequired
-                      value={
-                        isPlaceLoading2 ? "Loading..." : getValues("city") ?? ""
-                      }
-                      label="City"
-                      isDisabled
-                    />
-                    <Input
-                      {...register("country")}
-                      isInvalid={!!errors.country}
-                      errorMessage={errors.country?.message}
-                      color="warning"
-                      isRequired
-                      endContent={
-                        <Avatar
-                          className="h-6 w-6"
-                          showFallback
-                          name={countryCode}
-                          src={`https://flagcdn.com/${countryCode}.svg`}
-                        />
-                      }
-                      value={
-                        isPlaceLoading2
-                          ? "Loading..."
-                          : getValues("country") ?? ""
-                      }
-                      label="Country"
-                      isDisabled
-                    />
-                    <Input
-                      {...register("latitude")}
-                      isInvalid={!!errors.latitude}
-                      errorMessage={errors.latitude?.message}
-                      color="warning"
-                      type="number"
-                      isRequired
-                      onBlur={handleBlur}
-                      defaultValue={userSelectedPosition?.lat?.toString() ?? ""}
-                      label="Latitude"
-                      isDisabled={!!userSelectedPosition}
-                    />
-                    <Input
-                      {...register("longitude")}
-                      onBlur={handleBlur}
-                      isRequired
-                      isInvalid={!!errors.longitude}
-                      errorMessage={errors.longitude?.message}
-                      color="warning"
-                      type="number"
-                      // value={Math.random().toString()}
-                      label="Longitude"
-                      isDisabled={!!userSelectedPosition}
-                      defaultValue={userSelectedPosition?.lng?.toString() ?? ""}
-                      // isReadOnly={!!userSelectedPosition}
-                    />
-                    <Textarea
-                      color="warning"
-                      label="Notes"
-                      {...register("notes")}
-                    />
-                    <ModalFooter>
-                      <Button color="danger" variant="light" onPress={onClose}>
-                        Close
-                      </Button>
-                      <Button
-                        isLoading={isTravelAdding}
-                        type="submit"
-                        className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white"
-                      >
-                        ADD
-                      </Button>
-                    </ModalFooter>
-                  </form>
-                </ModalBody>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-      )}
+      <Modal
+        backdrop="blur"
+        onClose={() => {
+          setShouldUpdateCenter(false);
+          setUserSelectedPosition(undefined);
+          reset();
+          setCountryCode("");
+          // setIsPlaceLoading2(false);
+          reset();
+          // setPlaceError("");
+        }}
+        className="z-10"
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 font-serif text-3xl text-yellow-600">
+                Add Travel
+              </ModalHeader>
+              <ModalBody>
+                {/* eslint-disable-next-line */}
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+                  {/* When input is disabled, it returns undefined value */}
+                  <Input
+                    {...register("city")}
+                    isInvalid={!!errors.city}
+                    errorMessage={errors.city?.message}
+                    color="warning"
+                    isRequired
+                    value={
+                      isPlaceLoading ? "Loading..." : getValues("city") ?? ""
+                    }
+                    label="City"
+                    isDisabled
+                  />
+                  <Input
+                    {...register("country")}
+                    isInvalid={!!errors.country}
+                    errorMessage={errors.country?.message}
+                    color="warning"
+                    isRequired
+                    endContent={
+                      <Avatar
+                        className="h-6 w-6"
+                        showFallback
+                        name={countryCode}
+                        src={`https://flagcdn.com/${countryCode}.svg`}
+                      />
+                    }
+                    value={
+                      isPlaceLoading
+                        ? "Loading..."
+                        : getValues("country") ?? ""
+                    }
+                    label="Country"
+                    isDisabled
+                  />
+                  <Input
+                    {...register("latitude")}
+                    isInvalid={!!errors.latitude}
+                    errorMessage={errors.latitude?.message}
+                    color="warning"
+                    type="number"
+                    isRequired
+                    onBlur={handleBlur}
+                    defaultValue={userSelectedPosition?.lat?.toString() ?? ""}
+                    label="Latitude"
+                    isDisabled={!!userSelectedPosition}
+                  />
+                  <Input
+                    {...register("longitude")}
+                    onBlur={handleBlur}
+                    isRequired
+                    isInvalid={!!errors.longitude}
+                    errorMessage={errors.longitude?.message}
+                    color="warning"
+                    type="number"
+                    // value={Math.random().toString()}
+                    label="Longitude"
+                    isDisabled={!!userSelectedPosition}
+                    defaultValue={userSelectedPosition?.lng?.toString() ?? ""}
+                    // isReadOnly={!!userSelectedPosition}
+                  />
+                  <Textarea
+                    color="warning"
+                    label="Notes"
+                    {...register("notes")}
+                  />
+                  <ModalFooter>
+                    <Button color="danger" variant="light" onPress={onClose}>
+                      Close
+                    </Button>
+                    <Button
+                      isLoading={isTravelAdding}
+                      type="submit"
+                      className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white"
+                    >
+                      ADD
+                    </Button>
+                  </ModalFooter>
+                </form>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }; // onPress={() => {
