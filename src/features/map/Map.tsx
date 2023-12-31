@@ -9,7 +9,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { useGetTravels } from "../../hooks/useGetTravels";
-import { Avatar, Button, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, ButtonGroup, useDisclosure } from "@nextui-org/react";
 import TravelTable from "../travel/TravelTable";
 import TravelForm from "../travel/TravelForm";
 import { useUser } from "../../hooks/useUser";
@@ -42,20 +42,33 @@ const Map = ({
   } = useDisclosure();
 
   if (isGettingTravels) toast.loading("Loading travel positions");
-
   return (
     <>
       <div className="absolute left-1/2 top-8 z-10 mt-5 -translate-x-1/2 -translate-y-1/2">
-        <Button
-          onClick={() => {
-            onTableForm();
-            setIsOpen(false);
-          }}
-          color="warning"
-          className="font-serif text-lg font-bold"
-        >
-          View Travels
-        </Button>
+        <ButtonGroup>
+          <Button
+            onPress={() => {
+              onTableForm();
+              setIsOpen(false);
+            }}
+            color="warning"
+            className="font-serif text-lg font-bold"
+          >
+            View Travels
+          </Button>
+          <Button
+            onPress={() => {
+            console.log('pressed')
+              onFormOpen();
+            
+            }}
+            color="warning"
+            variant="faded"
+            className="font-serif text-lg font-bold"
+          >
+            Add Travel
+          </Button>
+        </ButtonGroup>
       </div>
       <MapContainer className="z-0 h-screen" center={mapPosition} zoom={6}>
         <TileLayer
@@ -70,10 +83,10 @@ const Map = ({
             position={[travel.latitude, travel.longitude]}
           >
             <Popup>
-              <div className="flex items-center justify-center rounded-sm bg-yellow-600 px-3 rounded-l-md text-xl text-white">
-                <span>{index+1}</span>
+              <div className="flex items-center justify-center rounded-sm rounded-l-md bg-yellow-600 px-3 text-xl text-white">
+                <span>{index + 1}</span>
               </div>
-              <div className="space-y-2 p-2 pl-4 bg-gray-100 rounded-r-md">
+              <div className="space-y-2 rounded-r-md bg-gray-100 p-2 pl-4">
                 <div className="flex items-center justify-center space-x-3">
                   <div>
                     <Avatar
@@ -88,8 +101,10 @@ const Map = ({
                     {travel.city}, {travel.country}
                   </div>
                 </div>
-                <div className="text-end">
-                  <time dateTime={travel.created_at.toString()}>{formatDate(travel.created_at)}</time>
+                <div className="flex items-center justify-end">
+                  <time dateTime={travel.created_at.toString()}>
+                    {formatDate(travel.created_at)}
+                  </time>
                 </div>
               </div>
             </Popup>
@@ -114,6 +129,7 @@ const Map = ({
         setShouldUpdateCenter={setShouldUpdateCenter}
       />
       <TravelForm
+      
         userSelectedPosition={userSelectedPosition}
         setMapPosition={setMapPosition}
         setUserSelectedPosition={setUserSelectedPosition}
