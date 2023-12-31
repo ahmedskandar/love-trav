@@ -18,7 +18,7 @@ import { useAddTravel } from "./useAddTravel";
 import { useUser } from "../../hooks/useUser";
 import { useEffect, useState } from "react";
 import { getPlaceByPosition } from "../../services/apiTravels";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 const TravelForm = ({
   isOpen,
@@ -28,10 +28,8 @@ const TravelForm = ({
   setUserSelectedPosition,
   setMapPosition,
   onClose,
-  place,
-} // placeError,
-// setPlaceError,
-: {
+  place, 
+}: {
   isOpen: boolean;
   setUserSelectedPosition: React.Dispatch<
     React.SetStateAction<{ lat: number; lng: number } | undefined>
@@ -42,8 +40,7 @@ const TravelForm = ({
   setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
   setShouldUpdateCenter: React.Dispatch<React.SetStateAction<boolean>>;
   place: TPlaceSchema | undefined;
-  // placeError: string;
-  // setPlaceError: React.Dispatch<React.SetStateAction<string>>;
+ 
 }) => {
   const {
     register,
@@ -58,12 +55,12 @@ const TravelForm = ({
 
   const { user } = useUser();
   const { addTravel, isTravelAdding } = useAddTravel();
-  // const [isPlaceLoading2, setIsPlaceLoading2] = useState(false);
   const [isPlaceLoading, setIsPlaceLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("");
-  // console.log({ placeError });
+  const [isPlaceError, setIsPlaceError] = useState(false);
 
   const onSubmit = (data: TTravelFormSchema) => {
+    if(isPlaceError) return toast.error('Please input a valid location')
     setMapPosition([data.latitude, data.longitude]);
     addTravel({ ...data, country_code: countryCode, user_id: user!.id });
     //Update center position to the new travel position after submitting the form and disabling it
@@ -75,17 +72,32 @@ const TravelForm = ({
     reset();
     setUserSelectedPosition(undefined);
     setCountryCode("");
+    setIsPlaceError(false);
   };
 
   const handleBlur = () => {
     const fetchData = async () => {
       if (getValues("latitude") && getValues("longitude")) {
-        setIsPlaceLoading(true);
-        const place = await getPlaceByPosition({
-          lat: getValues("latitude"),
-          lng: getValues("longitude"),
-        });
-
+        let place;
+        try {
+          setIsPlaceError(false);
+          setIsPlaceLoading(true);
+          place = await getPlaceByPosition({
+            lat: getValues("latitude"),
+            lng: getValues("longitude"),
+          });
+        } catch (e) {
+          setCountryCode("")
+          setValue("city", "");
+          setValue("country", "");
+          if (e instanceof Error) {
+            setIsPlaceError(true);
+            toast.error(e.message)
+          }
+          return;
+        } finally {
+          setIsPlaceLoading(false);
+        }
         const city =
           place?.address.state ??
           place?.address.country ??
@@ -102,12 +114,12 @@ const TravelForm = ({
 
     void fetchData();
   };
+  // console.log('render') ****FIX COMPONENT RENDERING WHEN PARENT COMPONENTS RENDER LATER!
+  
   // defaultValue only sets the initial value when the component is first rendered,
   //and it won’t update if the userSelectedPosition state changes.
   useEffect(() => {
     if (userSelectedPosition) {
-      // setPlaceError("");
-
       setCountryCode(place?.address.country_code ?? "");
       const city =
         place?.address.state ??
@@ -116,22 +128,12 @@ const TravelForm = ({
         place?.address.locality ??
         place?.address.village ??
         "";
-      // if (!place?.address.country || !city)  return setUserSelectedPosition(undefined)
       setValue("latitude", userSelectedPosition.lat);
       setValue("longitude", userSelectedPosition.lng);
       setValue("city", city);
       setValue("country", place?.address.country ?? "");
-      // !place?.address.country && !city && setPlaceError("Error");
     }
   }, [place?.address, setValue, userSelectedPosition]);
-
-  // if (isPlaceLoading) return toast.loading("Loading...");
-  // if (!isPlaceLoading && placeError) {
-  //   setUserSelectedPosition(undefined);
-  //   setShouldUpdateCenter(false);
-  //   return;
-  // }
-  // if (placeError) onClose();
 
   return (
     <>
@@ -142,9 +144,8 @@ const TravelForm = ({
           setUserSelectedPosition(undefined);
           reset();
           setCountryCode("");
-          // setIsPlaceLoading2(false);
           reset();
-          // setPlaceError("");
+          setIsPlaceError(false);
         }}
         className="z-10"
         isOpen={isOpen}
@@ -159,7 +160,6 @@ const TravelForm = ({
               <ModalBody>
                 {/* eslint-disable-next-line */}
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
-                  {/* When input is disabled, it returns undefined value */}
                   <Input
                     {...register("city")}
                     isInvalid={!!errors.city}
@@ -187,9 +187,7 @@ const TravelForm = ({
                       />
                     }
                     value={
-                      isPlaceLoading
-                        ? "Loading..."
-                        : getValues("country") ?? ""
+                      isPlaceLoading ? "Loading..." : getValues("country") ?? ""
                     }
                     label="Country"
                     isDisabled
@@ -214,11 +212,9 @@ const TravelForm = ({
                     errorMessage={errors.longitude?.message}
                     color="warning"
                     type="number"
-                    // value={Math.random().toString()}
                     label="Longitude"
                     isDisabled={!!userSelectedPosition}
                     defaultValue={userSelectedPosition?.lng?.toString() ?? ""}
-                    // isReadOnly={!!userSelectedPosition}
                   />
                   <Textarea
                     color="warning"
@@ -230,7 +226,7 @@ const TravelForm = ({
                       Close
                     </Button>
                     <Button
-                      isLoading={isTravelAdding}
+                      isLoading={isTravelAdding || isPlaceLoading}
                       type="submit"
                       className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white"
                     >
@@ -245,11 +241,6 @@ const TravelForm = ({
       </Modal>
     </>
   );
-}; // onPress={() => {
-// setMapPosition([40, 0]);
-// setTimeout(() => {
-//   onClose();
-// }, 1);
-// }}
+};
 
 export default TravelForm;
