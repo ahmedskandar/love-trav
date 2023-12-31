@@ -115,7 +115,7 @@ const TravelForm = ({
     void fetchData();
   };
   // console.log('render') ****FIX COMPONENT RENDERING WHEN PARENT COMPONENTS RENDER LATER!
-
+  
   // defaultValue only sets the initial value when the component is first rendered,
   //and it won’t update if the userSelectedPosition state changes.
   useEffect(() => {
@@ -170,7 +170,7 @@ const TravelForm = ({
                       isPlaceLoading ? "Loading..." : getValues("city") ?? ""
                     }
                     label="City"
-                    isReadOnly
+                    isDisabled
                   />
                   <Input
                     {...register("country")}
@@ -190,7 +190,7 @@ const TravelForm = ({
                       isPlaceLoading ? "Loading..." : getValues("country") ?? ""
                     }
                     label="Country"
-                    isReadOnly
+                    isDisabled
                   />
                   <Input
                     {...register("latitude")}
@@ -202,7 +202,7 @@ const TravelForm = ({
                     onBlur={handleBlur}
                     defaultValue={userSelectedPosition?.lat?.toString() ?? ""}
                     label="Latitude"
-                    isReadOnly={!!userSelectedPosition}
+                    isDisabled={!!userSelectedPosition}
                   />
                   <Input
                     {...register("longitude")}
@@ -213,7 +213,7 @@ const TravelForm = ({
                     color="warning"
                     type="number"
                     label="Longitude"
-                    isReadOnly={!!userSelectedPosition}
+                    isDisabled={!!userSelectedPosition}
                     defaultValue={userSelectedPosition?.lng?.toString() ?? ""}
                   />
                   <Textarea
