@@ -28,7 +28,7 @@ const TravelForm = ({
   setUserSelectedPosition,
   setMapPosition,
   onClose,
-  place, 
+  place,
 }: {
   isOpen: boolean;
   setUserSelectedPosition: React.Dispatch<
@@ -40,7 +40,6 @@ const TravelForm = ({
   setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
   setShouldUpdateCenter: React.Dispatch<React.SetStateAction<boolean>>;
   place: TPlaceSchema | undefined;
- 
 }) => {
   const {
     register,
@@ -60,7 +59,7 @@ const TravelForm = ({
   const [isPlaceError, setIsPlaceError] = useState(false);
 
   const onSubmit = (data: TTravelFormSchema) => {
-    if(isPlaceError) return toast.error('Please input a valid location')
+    if (isPlaceError) return toast.error("Please input a valid location");
     setMapPosition([data.latitude, data.longitude]);
     addTravel({ ...data, country_code: countryCode, user_id: user!.id });
     //Update center position to the new travel position after submitting the form and disabling it
@@ -87,12 +86,12 @@ const TravelForm = ({
             lng: getValues("longitude"),
           });
         } catch (e) {
-          setCountryCode("")
+          setCountryCode("");
           setValue("city", "");
           setValue("country", "");
           if (e instanceof Error) {
             setIsPlaceError(true);
-            toast.error(e.message)
+            toast.error(e.message);
           }
           return;
         } finally {
@@ -115,7 +114,7 @@ const TravelForm = ({
     void fetchData();
   };
   // console.log('render') ****FIX COMPONENT RENDERING WHEN PARENT COMPONENTS RENDER LATER!
-  
+
   // defaultValue only sets the initial value when the component is first rendered,
   //and it won’t update if the userSelectedPosition state changes.
   useEffect(() => {
@@ -179,12 +178,14 @@ const TravelForm = ({
                     color="warning"
                     isRequired
                     endContent={
-                      <Avatar
-                        className="h-6 w-6"
-                        showFallback
-                        name={countryCode}
-                        src={`https://flagcdn.com/${countryCode}.svg`}
-                      />
+                      countryCode && (
+                        <Avatar
+                          className="h-6 w-6"
+                          showFallback={true}
+                          name={countryCode}
+                          src={`https://flagcdn.com/${countryCode}.svg`}
+                        />
+                      )
                     }
                     value={
                       isPlaceLoading ? "Loading..." : getValues("country") ?? ""

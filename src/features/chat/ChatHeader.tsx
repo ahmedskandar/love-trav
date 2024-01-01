@@ -8,7 +8,7 @@ import { useAvatarAndConversation } from "./useAvatarAndConversation";
 const ChatHeader = ({ isOpen, setIsOpen }: ChatHeaderProps) => {
   const { conversations, isFetchingConversation } = useAvatarAndConversation();
   return (
-    <header className="flex items-center justify-between rounded-t bg-gradient-to-b from-yellow-600 to-yellow-500 p-1 pr-3">
+    <header className="flex items-center justify-between rounded-t-lg bg-gradient-to-b from-yellow-600 to-yellow-500 p-1 pr-3">
       <div className="flex items-center gap-2">
         <Skeleton className="rounded-full" isLoaded={!isFetchingConversation}>
           <Avatar

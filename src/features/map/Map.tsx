@@ -63,6 +63,7 @@ const Map = ({
           <Button
             onPress={() => {
               onFormOpen();
+              setIsOpen(false);
               // setPlaceError("");
               setUserSelectedPosition(undefined);
             }}
@@ -172,12 +173,12 @@ const DetectClick = ({
 }) => {
   // const [userSelectedPosition, setUserSelectedPosition] = useState<
   //   { lat: number; lng: number } | undefined
-  // >(); 
+  // >();
 
   const checkUserPositionValidity = async (latlng: LatLng) => {
     let place;
     try {
-      toast.loading('Loading...')
+      toast.loading("Loading...");
       place = await getPlaceByPosition({
         lat: latlng.lat,
         lng: latlng.lng,
