@@ -84,6 +84,7 @@ export type ChatClient = {
 type UserMetadata = {
   avatar: string;
   clientChatSlug: string;
+  username: string
 };
 
 export type NewUser = User & { user_metadata: UserMetadata };

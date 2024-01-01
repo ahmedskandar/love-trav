@@ -75,7 +75,7 @@ const TravelForm = ({
       data.longitude === editTravelValues?.longitude &&
       data.notes === editTravelValues?.notes)
     ) {
-      return toast.info("Nothing was updated")
+      return toast.info("Nothing was edited")
     } else console.log("diff");
     if (editTravelValues) {
       editTravel({
@@ -112,6 +112,7 @@ const TravelForm = ({
   };
  
   const handleBlur = () => {
+    // if() use state to check prev value of lat/lng
     const fetchData = async () => {
       if (getValues("latitude") && getValues("longitude")) {
         let place;

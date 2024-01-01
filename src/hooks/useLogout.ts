@@ -11,7 +11,7 @@ export const useLogout = () => {
     onSuccess: () => {
       //Removing user from react query cache
       queryClient.removeQueries();
-      toast.error("Successfully logged out");
+      toast.success("Successfully logged out");
       navigate("/login");
     },
   });

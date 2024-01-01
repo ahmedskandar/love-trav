@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { formatDate } from "../../lib/utils";
 import { getPlaceByPosition } from "../../services/apiTravels";
 import { TEditForm, TPlaceSchema } from "../../lib/types";
+import UserAvatar from "../../ui/UserAvatar";
 
 const Map = ({
   setIsOpen,
@@ -130,6 +131,7 @@ const Map = ({
           setIsOpen={setIsOpen}
         />
       </MapContainer>
+      <UserAvatar />
       <TravelTable
         setMapPosition={setMapPosition}
         isOpen={isOpen}
