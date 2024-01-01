@@ -13,12 +13,13 @@ import {
 import { LatLngExpression } from "leaflet";
 import { useForm } from "react-hook-form";
 import { travelFormSchema } from "../../lib/schemas";
-import { TPlaceSchema, TTravelFormSchema } from "../../lib/types";
+import { TEditForm, TPlaceSchema, TTravelFormSchema } from "../../lib/types";
 import { useAddTravel } from "./useAddTravel";
 import { useUser } from "../../hooks/useUser";
 import { useEffect, useState } from "react";
 import { getPlaceByPosition } from "../../services/apiTravels";
 import { toast } from "sonner";
+import { useEditTravel } from "./useEditTravel";
 
 const TravelForm = ({
   isOpen,
@@ -29,6 +30,8 @@ const TravelForm = ({
   setMapPosition,
   onClose,
   place,
+  editTravelValues,
+  setEditTravelValues,
 }: {
   isOpen: boolean;
   setUserSelectedPosition: React.Dispatch<
@@ -40,6 +43,10 @@ const TravelForm = ({
   setMapPosition: React.Dispatch<React.SetStateAction<LatLngExpression>>;
   setShouldUpdateCenter: React.Dispatch<React.SetStateAction<boolean>>;
   place: TPlaceSchema | undefined;
+  setEditTravelValues: React.Dispatch<
+    React.SetStateAction<TEditForm | undefined>
+  >;
+  editTravelValues: TEditForm | undefined;
 }) => {
   const {
     register,
@@ -54,26 +61,56 @@ const TravelForm = ({
 
   const { user } = useUser();
   const { addTravel, isTravelAdding } = useAddTravel();
+  const { editTravel, isTravelEditing } = useEditTravel();
   const [isPlaceLoading, setIsPlaceLoading] = useState(false);
   const [countryCode, setCountryCode] = useState("");
   const [isPlaceError, setIsPlaceError] = useState(false);
 
   const onSubmit = (data: TTravelFormSchema) => {
     if (isPlaceError) return toast.error("Please input a valid location");
-    setMapPosition([data.latitude, data.longitude]);
-    addTravel({ ...data, country_code: countryCode, user_id: user!.id });
-    //Update center position to the new travel position after submitting the form and disabling it
-    setShouldUpdateCenter(true);
-    setTimeout(() => {
+    if (
+      (data.city === editTravelValues?.city &&
+      data.country === editTravelValues?.country &&
+      data.latitude === editTravelValues?.latitude &&
+      data.longitude === editTravelValues?.longitude &&
+      data.notes === editTravelValues?.notes)
+    ) {
+      return toast.info("Nothing was updated")
+    } else console.log("diff");
+    if (editTravelValues) {
+      editTravel({
+        id: editTravelValues.id,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        notes: data.notes,
+        city: data.city,
+        country: data.country,
+      });
       onClose();
-      setShouldUpdateCenter(false);
-    }, 1);
-    reset();
+    } else {
+      addTravel({ ...data, country_code: countryCode, user_id: user!.id });
+      setMapPosition([data.latitude, data.longitude]);
+      //Update center position to the new travel position after submitting the form and disabling it
+      setShouldUpdateCenter(true);
+      setTimeout(() => {
+        onClose();
+        setShouldUpdateCenter(false);
+      }, 1);
+    }
+
+    reset({
+      city: "",
+      country: "",
+      notes: "",
+      latitude: undefined,
+      longitude: undefined,
+    });
     setUserSelectedPosition(undefined);
     setCountryCode("");
     setIsPlaceError(false);
+    setEditTravelValues(undefined);
   };
-
+ 
   const handleBlur = () => {
     const fetchData = async () => {
       if (getValues("latitude") && getValues("longitude")) {
@@ -131,9 +168,19 @@ const TravelForm = ({
       setValue("longitude", userSelectedPosition.lng);
       setValue("city", city);
       setValue("country", place?.address.country ?? "");
+      return;
     }
-  }, [place?.address, setValue, userSelectedPosition]);
+    if (editTravelValues) {
+      //  setCountryCode(editTravelValues.country ?? "");
 
+      setValue("latitude", editTravelValues.latitude);
+      setValue("longitude", editTravelValues.longitude);
+      setValue("city", editTravelValues.city);
+      setValue("country", editTravelValues.country ?? "");
+      setValue('notes', editTravelValues.notes)
+      return;
+    }
+  }, [place?.address, setValue, userSelectedPosition, editTravelValues]);
   return (
     <>
       <Modal
@@ -141,10 +188,21 @@ const TravelForm = ({
         onClose={() => {
           setShouldUpdateCenter(false);
           setUserSelectedPosition(undefined);
-          reset();
           setCountryCode("");
-          reset();
           setIsPlaceError(false);
+          setEditTravelValues(undefined);
+          // setValue("latitude", 0);
+          // setValue("longitude", 0);
+          // setValue("city", "");
+          // setValue("country", "");
+          //Reset in react hook form resets the value to the defaultValue (which is not what I want)
+          reset({
+            city: "",
+            country: "",
+            notes: "",
+            latitude: 0,
+            longitude: 0,
+          });
         }}
         className="z-10"
         isOpen={isOpen}
@@ -154,7 +212,7 @@ const TravelForm = ({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 font-serif text-3xl text-yellow-600">
-                Add Travel
+                {editTravelValues ? "Edit Travel" : "Add Travel"}
               </ModalHeader>
               <ModalBody>
                 {/* eslint-disable-next-line */}
@@ -198,12 +256,16 @@ const TravelForm = ({
                     isInvalid={!!errors.latitude}
                     errorMessage={errors.latitude?.message}
                     color="warning"
-                    type="number"
                     isRequired
                     onBlur={handleBlur}
-                    defaultValue={userSelectedPosition?.lat?.toString() ?? ""}
+                    defaultValue={
+                      userSelectedPosition?.lat?.toString() ??
+                      editTravelValues?.latitude.toString() ??
+                      ""
+                    }
                     label="Latitude"
                     isDisabled={!!userSelectedPosition}
+                    placeholder="0"
                   />
                   <Input
                     {...register("longitude")}
@@ -215,10 +277,16 @@ const TravelForm = ({
                     type="number"
                     label="Longitude"
                     isDisabled={!!userSelectedPosition}
-                    defaultValue={userSelectedPosition?.lng?.toString() ?? ""}
+                    defaultValue={
+                      userSelectedPosition?.lng?.toString() ??
+                      editTravelValues?.longitude.toString() ??
+                      ""
+                    }
+                    placeholder="0"
                   />
                   <Textarea
                     color="warning"
+                    defaultValue={editTravelValues?.notes}
                     label="Notes"
                     {...register("notes")}
                   />
@@ -227,11 +295,13 @@ const TravelForm = ({
                       Close
                     </Button>
                     <Button
-                      isLoading={isTravelAdding || isPlaceLoading}
+                      isLoading={
+                        isTravelAdding || isPlaceLoading || isTravelEditing
+                      }
                       type="submit"
                       className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white"
                     >
-                      ADD
+                      {editTravelValues ? "EDIT" : "ADD"}
                     </Button>
                   </ModalFooter>
                 </form>

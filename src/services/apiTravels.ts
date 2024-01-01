@@ -1,5 +1,5 @@
 import { rapidApiReverseGeocodingKey } from "../lib/constants";
-import { TPlaceSchema, TTravelFormSchema } from "../lib/types";
+import { TEditForm, TPlaceSchema, TTravelFormSchema } from "../lib/types";
 import { supabase } from "./supabase";
 import { placeSchema } from "../lib/schemas";
 
@@ -24,14 +24,19 @@ export const deleteTravel = async (id: number) => {
   if (error) throw new Error("Error: " + error.message);
 };
 
-export const addTravel = async (travel: {
-  notes: string;
-  longitude: number;
-  latitude: number;
-  user_id: string;
-  country_code: string;
-}) => {
+export const addTravel = async (
+  travel: TTravelFormSchema & {
+    user_id: string;
+    country_code: string;
+  },
+) => {
   const { error } = await supabase.from("travels").insert([travel]);
+
+  if (error) throw new Error("Error: " + error.message);
+};
+
+export const editTravel = async ({ id, ...travel }: TEditForm) => {
+  const { error } = await supabase.from("travels").update(travel).eq("id", id);
 
   if (error) throw new Error("Error: " + error.message);
 };
@@ -41,7 +46,7 @@ export const getPlaceByPosition = async ({
   lng,
 }: {
   lat: number;
- lng: number;
+  lng: number;
 }) => {
   const apiUrl = "https://forward-reverse-geocoding.p.rapidapi.com/v1/reverse";
   // const params = new URLSearchParams({

@@ -88,7 +88,9 @@ type UserMetadata = {
 
 export type NewUser = User & { user_metadata: UserMetadata };
 
-export type TConversationResponseSchema = z.infer<typeof ConversationResponseSchema>
+export type TConversationResponseSchema = z.infer<
+  typeof ConversationResponseSchema
+>;
 
 export type ConversationInput = {
   input: string;
@@ -114,6 +116,15 @@ export type ConversationParams = {
   clientChatSlug: string;
 };
 
-export type TTravelFormSchema = z.infer<typeof travelFormSchema>
+export type TTravelFormSchema = z.infer<typeof travelFormSchema>;
 
-export type TPlaceSchema = z.infer<typeof placeSchema>
+export type TPlaceSchema = z.infer<typeof placeSchema>;
+
+export type TEditForm = {
+  id: number;
+  notes: string;
+  city: string;
+  country: string;
+  longitude: number;
+  latitude: number;
+};

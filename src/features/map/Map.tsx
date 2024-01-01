@@ -16,7 +16,7 @@ import { useUser } from "../../hooks/useUser";
 import { toast } from "sonner";
 import { formatDate } from "../../lib/utils";
 import { getPlaceByPosition } from "../../services/apiTravels";
-import { TPlaceSchema } from "../../lib/types";
+import { TEditForm, TPlaceSchema } from "../../lib/types";
 
 const Map = ({
   setIsOpen,
@@ -29,6 +29,10 @@ const Map = ({
   const [shouldUpdateCenter, setShouldUpdateCenter] = useState(false);
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([40, 0]);
   const [place, setPlace] = useState<TPlaceSchema | undefined>();
+  const [editTravelValues, setEditTravelValues] = useState<TEditForm | undefined>(
+    
+  );
+
   const [userSelectedPosition, setUserSelectedPosition] = useState<
     { lat: number; lng: number } | undefined
   >();
@@ -43,7 +47,6 @@ const Map = ({
     onOpenChange: onFormOpenChange,
     onClose: onFormClose,
   } = useDisclosure();
-
   if (isGettingTravels) toast.loading("Loading travel positions");
 
   return (
@@ -131,12 +134,15 @@ const Map = ({
         setMapPosition={setMapPosition}
         isOpen={isOpen}
         onOpenChange={onTableOpenChange}
+        setEditTravelValues={setEditTravelValues}
         onFormOpen={onFormOpen}
         setShouldUpdateCenter={setShouldUpdateCenter}
       />
       <TravelForm
         // placeError={placeError}
         // setPlaceError={setPlaceError}
+        setEditTravelValues={setEditTravelValues}
+        editTravelValues={editTravelValues}
         place={place}
         userSelectedPosition={userSelectedPosition}
         setMapPosition={setMapPosition}
