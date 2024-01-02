@@ -1,5 +1,6 @@
 import { rapidApiKey } from "./constants";
 import { ChatClientSchema } from "../lib/schemas";
+import { toast } from "sonner";
 
 //Creates a new client for the chat bot
 export const createClient = async () => {
@@ -23,7 +24,7 @@ export const createClient = async () => {
       throw new Error(validatedChatClient.error.message);
     return validatedChatClient.data;
   } catch (e) {
-    if (e instanceof Error) throw new Error(e.message);
+    if (e instanceof Error) toast.error(e.message);
   }
 };
 
