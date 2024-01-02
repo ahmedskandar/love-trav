@@ -11,7 +11,7 @@ export const useUpdate = () => {
       toast.success(
         "Password successfully updated! Be sure to not forget it next time :)",
       );
-      navigate("/app/travels", { replace: true });
+      navigate("/app/", { replace: true });
     },
     onError: (error) => toast.error(error.message),
   });
