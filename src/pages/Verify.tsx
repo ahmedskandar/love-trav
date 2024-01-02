@@ -45,7 +45,7 @@ const Verify = () => {
       }
       setTimeout(
         //Timer is set to give a chance for the toast to display before navigating
-        () => navigate(destination === "success" ? "/login/" : "/"),
+        () => navigate(destination === "success" ? "/app" : "/"),
         1,
       );
     };
