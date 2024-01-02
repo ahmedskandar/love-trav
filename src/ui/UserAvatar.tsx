@@ -18,7 +18,7 @@ const UserAvatar = () => {
   const { username } = newUser.user_metadata;
   const { avatar, conversations } = useAvatarAndConversation();
   const { logout, isPending } = useLogout();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   if (isPending) toast.loading("Logging out...");
   return (
     <Dropdown placement="bottom-start">
@@ -40,7 +40,7 @@ const UserAvatar = () => {
         <DropdownItem onPress={() => logout()} key="logout" color="danger">
           Log Out
         </DropdownItem>
-        <DropdownItem onPress={() => navigate('/profile/update')} key="update">
+        <DropdownItem onPress={() => navigate("/profile/update")} key="update">
           Change password
         </DropdownItem>
       </DropdownMenu>

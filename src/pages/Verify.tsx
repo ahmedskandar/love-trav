@@ -28,12 +28,12 @@ const Verify = () => {
         if (!clientData) return;
         const { error } = await supabase
           .from("clients")
-          .insert([clientData.data]);
+          .insert([clientData.data]);//Create custom hook for this
 
         if (error)
           throw new Error("Error adding client record: " + error.message);
 
-        //Update user meta data to add the client slug
+          //Update user meta data to add the client slug
         const { error: updateError } = await supabase.auth.updateUser({
           data: { clientChatSlug: clientData.data.slug },
         });
