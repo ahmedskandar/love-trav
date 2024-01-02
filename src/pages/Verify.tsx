@@ -20,7 +20,7 @@ const Verify = () => {
       toast[destination](message);
       setTimeout(
         //Timer is set to give a chance for the toast to display before navigating
-        () => navigate(destination === "success" ? "/app/travels" : "/"),
+        () => navigate(destination === "success" ? "/app/" : "/"),
         1,
       );
     };
