@@ -16,7 +16,7 @@ export const createClient = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Chat client could not be created");
+      return
     }
     const chatClient: unknown = await response.json();
     const validatedChatClient = ChatClientSchema.safeParse(chatClient);

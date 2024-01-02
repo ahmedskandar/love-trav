@@ -1,5 +1,4 @@
 import { TLoginSchema, TResetSchema, TSignUpSchema } from "../lib/types";
-import { createClient } from "../lib/utils";
 import { supabaseUrl, supabase } from "./supabase";
 
 export const login = async ({ email, password }: TLoginSchema) => {
@@ -9,23 +8,23 @@ export const login = async ({ email, password }: TLoginSchema) => {
   });
   if (error) throw new Error(error.message);
 
-  //If user is new, create a new chat client for him
-  if (!data?.user?.user_metadata?.clientChatSlug) {
-    const clientData = (await createClient())!; //If createClient throws an error, code execution will stop and the error will be propagated to react query
+  // //If user is new, create a new chat client for him
+  // if (!data?.user?.user_metadata?.clientChatSlug) {
+  //   const clientData = (await createClient())!; //If createClient throws an error, code execution will stop and the error will be propagated to react query
 
-    //Add the client details record in its table
-    const { error } = await supabase.from("clients").insert([clientData.data]);
+  //   //Add the client details record in its table
+  //   const { error } = await supabase.from("clients").insert([clientData.data]);
 
-    if (error) throw new Error("Error adding client record: " + error.message);
+  //   if (error) throw new Error("Error adding client record: " + error.message);
 
-    //Update user meta data to add the client slug
-    const { error: updateError } = await supabase.auth.updateUser({
-      data: { clientChatSlug: clientData.data.slug },
-    });
+  //   //Update user meta data to add the client slug
+  //   const { error: updateError } = await supabase.auth.updateUser({
+  //     data: { clientChatSlug: clientData.data.slug },
+  //   });
 
-    if (updateError)
-      throw new Error("Error creating a chat client: " + updateError.message);
-  }
+  //   if (updateError)
+  //     throw new Error("Error creating a chat client: " + updateError.message);
+  // }
 
   return data;
 };

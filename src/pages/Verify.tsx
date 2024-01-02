@@ -2,7 +2,8 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { params } from "../lib/constants";
-
+import { createClient } from "../lib/utils";
+import { supabase } from "../services/supabase";
 
 //After user has clicked on the verify email link sent
 const Verify = () => {
@@ -15,8 +16,33 @@ const Verify = () => {
     const accessToken = params.access_token;
     const errorDescription = params.error_description?.replace(/\+/g, " ");
 
-    const showToast = (message: string, destination: "success" | "error") => {
+    const showToast = async (
+      message: string,
+      destination: "success" | "error",
+    ) => {
       toast[destination](message);
+      if (destination === "success") {
+        const clientData = (await createClient())!; //If createClient throws an error, code execution will stop and the error will be propagated to react query
+
+        //Add the client details record in its table
+        if (!clientData) return;
+        const { error } = await supabase
+          .from("clients")
+          .insert([clientData.data]);
+
+        if (error)
+          throw new Error("Error adding client record: " + error.message);
+
+        //Update user meta data to add the client slug
+        const { error: updateError } = await supabase.auth.updateUser({
+          data: { clientChatSlug: clientData.data.slug },
+        });
+
+        if (updateError)
+          throw new Error(
+            "Error creating a chat client: " + updateError.message,
+          );
+      }
       setTimeout(
         //Timer is set to give a chance for the toast to display before navigating
         () => navigate(destination === "success" ? "/login/" : "/"),
@@ -25,30 +51,30 @@ const Verify = () => {
     };
 
     // const addClient = async () => {
-    //   const clientData = (await createClient())!; //If createClient throws an error, code execution will stop and the error will be propagated to react query
+    // const clientData = (await createClient())!; //If createClient throws an error, code execution will stop and the error will be propagated to react query
 
-    //   //Add the client details record in its table
-    //   const { error } = await supabase
-    //     .from("clients")
-    //     .insert([clientData.data]);
+    // //Add the client details record in its table
+    // const { error } = await supabase
+    //   .from("clients")
+    //   .insert([clientData.data]);
 
-    //   if (error)
-    //     throw new Error("Error adding client record: " + error.message);
+    // if (error)
+    //   throw new Error("Error adding client record: " + error.message);
 
-    //   //Update user meta data to add the client slug
-    //   const { error: updateError } = await supabase.auth.updateUser({
-    //     data: { clientChatSlug: clientData.data.slug },
-    //   });
+    // //Update user meta data to add the client slug
+    // const { error: updateError } = await supabase.auth.updateUser({
+    //   data: { clientChatSlug: clientData.data.slug },
+    // });
 
-    //   if (updateError)
-    //     throw new Error("Error creating a chat client: " + updateError.message);
+    // if (updateError)
+    //   throw new Error("Error creating a chat client: " + updateError.message);
     // };
 
     if (accessToken) {
-      showToast("You have successfully verified your email", "success");
+      void showToast("You have successfully verified your email", "success");
       // void addClient();
-    } else if (errorDescription) showToast(errorDescription, "error");
-    else showToast("No access token, redirected", "error");
+    } else if (errorDescription) void showToast(errorDescription, "error");
+    else void showToast("No access token, redirected", "error");
   }, [navigate, render]);
 
   return null;
