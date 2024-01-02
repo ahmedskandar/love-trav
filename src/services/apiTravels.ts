@@ -1,4 +1,4 @@
-import { rapidApiReverseGeocodingKey } from "../lib/constants";
+import { rapidApiKey } from "../lib/constants";
 import { TEditForm, TPlaceSchema, TTravelFormSchema } from "../lib/types";
 import { supabase } from "./supabase";
 import { placeSchema } from "../lib/schemas";
@@ -56,7 +56,7 @@ export const getPlaceByPosition = async ({
   // });
 
   const headers = {
-    "X-RapidAPI-Key": rapidApiReverseGeocodingKey,
+    "X-RapidAPI-Key": rapidApiKey,
     "X-RapidAPI-Host": "forward-reverse-geocoding.p.rapidapi.com",
   };
   const response = await fetch(`${apiUrl}?lat=${lat}&lon=${lng}`, {

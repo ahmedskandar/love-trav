@@ -102,8 +102,8 @@ const TravelForm = ({
       city: "",
       country: "",
       notes: "",
-      latitude: undefined,
-      longitude: undefined,
+      latitude: 0,
+      longitude: 0,
     });
     setUserSelectedPosition(undefined);
     setCountryCode("");

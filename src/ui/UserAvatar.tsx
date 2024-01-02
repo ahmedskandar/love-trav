@@ -10,6 +10,7 @@ import { NewUser } from "../lib/types";
 import { useAvatarAndConversation } from "../features/chat/useAvatarAndConversation";
 import { useLogout } from "../hooks/useLogout";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const UserAvatar = () => {
   const { user } = useUser();
@@ -17,6 +18,7 @@ const UserAvatar = () => {
   const { username } = newUser.user_metadata;
   const { avatar, conversations } = useAvatarAndConversation();
   const { logout, isPending } = useLogout();
+  const navigate = useNavigate()
   if (isPending) toast.loading("Logging out...");
   return (
     <Dropdown placement="bottom-start">
@@ -27,7 +29,7 @@ const UserAvatar = () => {
             isBordered: true,
             src:
               avatar ||
-              conversations?.[conversations?.length - 1].clients.image,
+              conversations?.[conversations?.length - 1]?.clients?.image,
           }}
           className="bg-white/100 p-1 pr-2 transition-transform"
           description={user?.email}
@@ -37,6 +39,9 @@ const UserAvatar = () => {
       <DropdownMenu aria-label="User Actions" variant="flat">
         <DropdownItem onPress={() => logout()} key="logout" color="danger">
           Log Out
+        </DropdownItem>
+        <DropdownItem onPress={() => navigate('/profile/update')} key="update">
+          Change password
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

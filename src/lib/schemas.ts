@@ -3,7 +3,7 @@ import { z } from "zod";
 export const envSchema = z.object({
   VITE_SUPABASE_API_KEY: z.string().min(1),
   VITE_RAPID_API_KEY: z.string().min(1),
-  VITE_REVERSE_GEOCODING_RAPID_API_KEY: z.string().min(1),
+  // VITE_REVERSE_GEOCODING_RAPID_API_KEY: z.string().min(1),
 });
 
 export const parsedEnv = envSchema.parse(import.meta.env);
